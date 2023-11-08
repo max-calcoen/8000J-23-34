@@ -1,21 +1,15 @@
 #include "main.h"
 #include "autoSelect/selection.h"
 #include "autons.h"
+#include "robotFunctions.h"
 
-lemlib::Chassis *chassis = nullptr; // Initialize to nullptr
 pros::Controller controller = pros::E_CONTROLLER_MASTER;
 
-void screen() {
-  // loop forever
-  while (true) {
-    lemlib::Pose pose =
-        chassis->getPose(); // get the current position of the robot
-    pros::lcd::print(0, "x: %f", pose.x);           // print the x position
-    pros::lcd::print(1, "y: %f", pose.y);           // print the y position
-    pros::lcd::print(2, "heading: %f", pose.theta); // print the heading
-    pros::delay(10);
-  }
-}
+lemlib::Chassis *chassis = nullptr; // initialize to nullptr
+
+pros::Motor_Group *left_drivetrain = nullptr;  // initialize to nullptr
+pros::Motor_Group *right_drivetrain = nullptr; // initialize to nullptr
+
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -41,7 +35,7 @@ void initialize() {
   lemlib::Drivetrain_t drivetrain{
       &left,  // left drivetrain motors
       &right, // right drivetrain motors
-      10,     // track width TODO: calculate
+      10,     // track width (in) TODO: calculate
       4.0,    // wheel diameter
       300     // wheel rpm
   };
@@ -144,6 +138,17 @@ void autonomous() {
   }
 }
 
+// https://www.desmos.com/calculator/sdhupmozc2
+double filterJoystickInput(int32_t input) {
+  input = abs(input);
+  const int DEADZONE = 3;
+  const double SCALE = 1.8;
+  int32_t sign = (input < 0) ? -1 : 1;
+  if (input < DEADZONE)
+    return 0;
+  return sign * pow(input, SCALE) / pow(127, SCALE - 1);
+}
+
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -159,6 +164,13 @@ void autonomous() {
  */
 void opcontrol() {
   while (true) {
+    int32_t leftstick =
+        filterJoystickInput(controller.get_analog(ANALOG_LEFT_Y));
+    int32_t rightstick =
+        filterJoystickInput(controller.get_analog(ANALOG_RIGHT_Y));
+
+    left_drivetrain->move(leftstick);
+    right_drivetrain->move(rightstick);
     pros::delay(20);
   }
 }

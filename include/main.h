@@ -82,7 +82,11 @@ void opcontrol(void);
 #endif
 
 // global vars
-extern lemlib::Chassis *chassis;
 extern pros::Controller controller;
+
+extern lemlib::Chassis *chassis;
+
+extern pros::Motor_Group *left_motors;
+extern pros::Motor_Group *right_motors;
 
 #endif // _PROS_MAIN_H_
