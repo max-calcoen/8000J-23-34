@@ -1,6 +1,8 @@
 #include "robotFunctions.h"
 #include "Graphy/Grapher.hpp"
 #include "main.h"
+#include "okapi/api.hpp"
+#include "okapi/impl/control/iterative/iterativeControllerFactory.hpp"
 
 void odomScreen() {
   // loop forever
@@ -15,26 +17,23 @@ void odomScreen() {
 }
 
 void flywheelScreen() {
-  // TODO: implement these variables
-  double TARGET_VEL = 0;
-  double CURRENT_VEL = 0;
-  // Create grapher
+  // create grapher
   std::shared_ptr<graphy::AsyncGrapher> grapher(
       new graphy::AsyncGrapher("Flywheel Velocity vs. Time"));
 
-  // Add data types
+  // add data types
   grapher->addDataType("Desired Vel", COLOR_ORANGE);
   grapher->addDataType("Actual Vel", COLOR_AQUAMARINE);
 
-  // Start grapher task
+  // start grapher task
   grapher->startTask();
 
   while (true) {
-    // Update data
-    grapher->update("Desired Vel", TARGET_VEL);
-    grapher->update("Actual Vel", CURRENT_VEL);
-
-    pros::delay(10);
+    // update data
+    grapher->update("Desired Vel", targetFlywheelSpeed);
+    grapher->update("Actual Vel", currFlywheelSpeed);
+    // run loop at 30ms intervals
+    pros::delay(30);
   }
 }
 
@@ -46,3 +45,29 @@ double filterJoystickInput(int input) {
     return 0;
   return (input < 0) ? -1 : 1 * pow(abs(input), SCALE) / pow(127, SCALE - 1);
 }
+
+double flywheelSpeed = 0;
+double currFlywheelSpeed = 0;
+
+void flywheelTask() {
+  // TODO: tune
+  const double kP = 0.001;
+  const double kI = 0.0001;
+  const double kD = 0.0001;
+  const double TARGET = 100.0;
+  const int MOTOR_PORT = 1; // TODO: configure port
+  const pros::Motor flywheel(1);
+
+  okapi::IterativeVelPIDController fwController =
+      okapi::IterativeControllerFactory::velPID(kP, kI, kD);
+
+  // execute the movement
+  fwController.setTarget(TARGET);
+  while (true) {
+    currFlywheelSpeed = flywheel.get_actual_velocity();
+    fwController.controllerSet(fwController.step(currFlywheelSpeed));
+
+    pros::delay(10); // run control loop at 10ms intervals
+  }
+}
+void initFlywheelTask() { pros::Task fwTask(flywheelTask); }
