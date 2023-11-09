@@ -1,3 +1,8 @@
+// TODO: test
+// flywheel with grapher
+// odom with lemlib
+// drive
+
 #include "main.h"
 #include "autoSelect/selection.h"
 #include "autons.h"
@@ -78,7 +83,7 @@ void initialize() {
   // callibrate chassis
   chassis->calibrate();
   // create a task to print the position to the screen
-  pros::Task screenTask(screen);
+  pros::Task screenTask(flywheelScreen);
   // TODO: tune, also make different autons make starting pose different
   chassis->setPose(0, 0, 0); // X: 0, Y: 0, Heading: 0
 }
@@ -138,17 +143,6 @@ void autonomous() {
   }
 }
 
-// https://www.desmos.com/calculator/sdhupmozc2
-double filterJoystickInput(int32_t input) {
-  input = abs(input);
-  const int DEADZONE = 3;
-  const double SCALE = 1.8;
-  int32_t sign = (input < 0) ? -1 : 1;
-  if (input < DEADZONE)
-    return 0;
-  return sign * pow(input, SCALE) / pow(127, SCALE - 1);
-}
-
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -164,10 +158,8 @@ double filterJoystickInput(int32_t input) {
  */
 void opcontrol() {
   while (true) {
-    int32_t leftstick =
-        filterJoystickInput(controller.get_analog(ANALOG_LEFT_Y));
-    int32_t rightstick =
-        filterJoystickInput(controller.get_analog(ANALOG_RIGHT_Y));
+    int leftstick = filterJoystickInput(controller.get_analog(ANALOG_LEFT_Y));
+    int rightstick = filterJoystickInput(controller.get_analog(ANALOG_RIGHT_Y));
 
     left_drivetrain->move(leftstick);
     right_drivetrain->move(rightstick);

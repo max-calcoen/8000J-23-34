@@ -1,1 +1,3 @@
-void screen();
+void odomScreen();
+void flywheelScreen();
+double filterJoystickInput(int input);
