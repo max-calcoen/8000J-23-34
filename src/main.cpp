@@ -25,7 +25,8 @@ lemlib::Chassis *chassis = nullptr; // initialize to nullptr
 pros::Motor_Group *left_drivetrain = nullptr;  // initialize to nullptr
 pros::Motor_Group *right_drivetrain = nullptr; // initialize to nullptr
 
-pros::Motor *flywheel = nullptr;
+pros::Motor *flywheel = new pros::Motor(7, pros::E_MOTOR_GEARSET_06, true);
+pros::Motor *intake = new pros::Motor(8, pros::E_MOTOR_GEARSET_06, true);
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -38,25 +39,24 @@ void initialize() {
   // // TODO: figure out how to switch from selector in pre-comp to lcd in comp
   // TODO: branch selector and make better auton selector
   pros::lcd::initialize();
-  // TODO: configure ports
-  pros::Motor left_front(1, pros::E_MOTOR_GEARSET_06, false);
-  pros::Motor left_middle(2, pros::E_MOTOR_GEARSET_06, true);
-  pros::Motor left_back(3, pros::E_MOTOR_GEARSET_06, false);
-  pros::Motor right_front(4, pros::E_MOTOR_GEARSET_06, true);
-  pros::Motor right_middle(5, pros::E_MOTOR_GEARSET_06, false);
-  pros::Motor right_back(6, pros::E_MOTOR_GEARSET_06, true);
+  // TODO: configure chassis
+  pros::Motor lf(1, pros::E_MOTOR_GEARSET_06, false);
+  pros::Motor lm(2, pros::E_MOTOR_GEARSET_06, true);
+  pros::Motor lb(3, pros::E_MOTOR_GEARSET_06, false);
 
-  pros::Motor flywheel(7, pros::E_MOTOR_GEARSET_06, false);
+  pros::Motor rf(4, pros::E_MOTOR_GEARSET_06, true);
+  pros::Motor rm(5, pros::E_MOTOR_GEARSET_06, false);
+  pros::Motor rb(6, pros::E_MOTOR_GEARSET_06, true);
 
-  pros::MotorGroup left({left_front, left_middle, left_back});
-  pros::MotorGroup right({right_front, right_middle, right_back});
+  left_drivetrain = new pros::Motor_Group({lf, lm, lb});
+  right_drivetrain = new pros::Motor_Group({rf, rm, rb});
 
   lemlib::Drivetrain_t drivetrain{
-      &left,  // left drivetrain motors
-      &right, // right drivetrain motors
-      10,     // track width (in) TODO: calculate
-      4.0,    // wheel diameter
-      300     // wheel rpm
+      left_drivetrain,  // left drivetrain motors
+      right_drivetrain, // right drivetrain motors
+      10,               // track width (in) TODO: calculate
+      4.0,              // wheel diameter
+      300               // wheel rpm
   };
 
   // TODO: complete
