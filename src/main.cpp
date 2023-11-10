@@ -3,6 +3,16 @@
 // odom with lemlib
 // drive
 
+// CHECKLIST:
+// name            coded       tested
+// drive           yes         no
+// flywheel pid    yes         no
+// pid             yes         no
+// auton selector  yes         no
+// path following  no          no
+// intake          yes         no
+// autons          no          no
+
 #include "main.h"
 #include "autoSelect/selection.h"
 #include "autons.h"
@@ -15,6 +25,8 @@ lemlib::Chassis *chassis = nullptr; // initialize to nullptr
 pros::Motor_Group *left_drivetrain = nullptr;  // initialize to nullptr
 pros::Motor_Group *right_drivetrain = nullptr; // initialize to nullptr
 
+pros::Motor *flywheel = nullptr;
+
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -26,13 +38,15 @@ void initialize() {
   // // TODO: figure out how to switch from selector in pre-comp to lcd in comp
   // TODO: branch selector and make better auton selector
   pros::lcd::initialize();
-  // TODO: complete
+  // TODO: configure ports
   pros::Motor left_front(1, pros::E_MOTOR_GEARSET_06, false);
-  pros::Motor left_middle(2, pros::E_MOTOR_GEARSET_06, false);
+  pros::Motor left_middle(2, pros::E_MOTOR_GEARSET_06, true);
   pros::Motor left_back(3, pros::E_MOTOR_GEARSET_06, false);
-  pros::Motor right_front(4, pros::E_MOTOR_GEARSET_06, false);
+  pros::Motor right_front(4, pros::E_MOTOR_GEARSET_06, true);
   pros::Motor right_middle(5, pros::E_MOTOR_GEARSET_06, false);
-  pros::Motor right_back(6, pros::E_MOTOR_GEARSET_06, false);
+  pros::Motor right_back(6, pros::E_MOTOR_GEARSET_06, true);
+
+  pros::Motor flywheel(7, pros::E_MOTOR_GEARSET_06, false);
 
   pros::MotorGroup left({left_front, left_middle, left_back});
   pros::MotorGroup right({right_front, right_middle, right_back});
@@ -54,6 +68,7 @@ void initialize() {
       nullptr, nullptr, nullptr, nullptr,
       &inertialSensor // inertial sensor
   };
+  // https://lemlib.github.io/LemLib/md_docs_tutorials_3_tuning_and_moving.html
   // TODO: tune
   // forward/backward PID
   lemlib::ChassisController_t lateralController{
@@ -84,8 +99,8 @@ void initialize() {
   chassis->calibrate();
   // create a task to print the position to the screen
   pros::Task screenTask(flywheelScreen);
-  // TODO: tune, also make different autons make starting pose different
-  chassis->setPose(0, 0, 0); // X: 0, Y: 0, Heading: 0
+  // TODO: different autons have different starting poses
+  chassis->setPose(0, 0, 0);
 }
 
 /**
@@ -158,9 +173,11 @@ void autonomous() {
  */
 void opcontrol() {
   while (true) {
+    handleButtons();
+
     int leftstick = filterJoystickInput(controller.get_analog(ANALOG_LEFT_Y));
     int rightstick = filterJoystickInput(controller.get_analog(ANALOG_RIGHT_Y));
-
+    // TODO: voltage vs rpm
     left_drivetrain->move(leftstick);
     right_drivetrain->move(rightstick);
     pros::delay(20);

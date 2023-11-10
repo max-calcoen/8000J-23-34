@@ -3,6 +3,7 @@
 #include "main.h"
 #include "okapi/api.hpp"
 #include "okapi/impl/control/iterative/iterativeControllerFactory.hpp"
+#include "pros/misc.h"
 
 void odomScreen() {
   // loop forever
@@ -54,20 +55,35 @@ void flywheelTask() {
   const double kP = 0.001;
   const double kI = 0.0001;
   const double kD = 0.0001;
-  const double TARGET = 100.0;
   const int MOTOR_PORT = 1; // TODO: configure port
-  const pros::Motor flywheel(1);
 
   okapi::IterativeVelPIDController fwController =
       okapi::IterativeControllerFactory::velPID(kP, kI, kD);
 
   // execute the movement
-  fwController.setTarget(TARGET);
+  fwController.setTarget(targetFlywheelSpeed);
   while (true) {
-    currFlywheelSpeed = flywheel.get_actual_velocity();
+    fwController.setTarget(targetFlywheelSpeed);
+    currFlywheelSpeed = flywheel->get_actual_velocity();
     fwController.controllerSet(fwController.step(currFlywheelSpeed));
 
     pros::delay(10); // run control loop at 10ms intervals
   }
 }
 void initFlywheelTask() { pros::Task fwTask(flywheelTask); }
+
+void handleButtons() {
+  // toggle flywhel
+  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y))
+    targetFlywheelSpeed = targetFlywheelSpeed == 0 ? 600 : 0;
+  // hold r1 for outtake
+  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
+    intake->move(-127);
+  else
+    intake->move(0);
+  // hold r2 for intake (override outtake)
+  if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
+    intake->move(127);
+  else
+    intake->move(0);
+}

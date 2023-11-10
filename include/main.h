@@ -89,4 +89,7 @@ extern lemlib::Chassis *chassis;
 extern pros::Motor_Group *left_motors;
 extern pros::Motor_Group *right_motors;
 
+extern pros::Motor *flywheel;
+extern pros::Motor *intake;
+
 #endif // _PROS_MAIN_H_
