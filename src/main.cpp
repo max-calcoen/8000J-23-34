@@ -16,6 +16,7 @@
 #include "main.h"
 #include "autoSelect/selection.h"
 #include "autons.h"
+#include "pros/adi.h"
 #include "robotFunctions.h"
 
 pros::Controller controller = pros::E_CONTROLLER_MASTER;
@@ -25,8 +26,8 @@ lemlib::Chassis *chassis = nullptr; // initialize to nullptr
 pros::Motor_Group *left_drivetrain = nullptr;  // initialize to nullptr
 pros::Motor_Group *right_drivetrain = nullptr; // initialize to nullptr
 
-pros::Motor *flywheel = new pros::Motor(2, pros::E_MOTOR_GEARSET_06, true);
 pros::Motor *intake = new pros::Motor(1, pros::E_MOTOR_GEARSET_06, true);
+pros::Motor *flywheel = new pros::Motor(2, pros::E_MOTOR_GEARSET_06, true);
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -39,12 +40,12 @@ void initialize() {
   // // TODO: figure out how to switch from selector in pre-comp to lcd in comp
   // TODO: branch selector and make better auton selector
   pros::lcd::initialize();
-  // TODO: configure chassis
-  pros::Motor lf(13, pros::E_MOTOR_GEARSET_06, false);
-  pros::Motor lm(12, pros::E_MOTOR_GEARSET_06, true);
-  pros::Motor lb(11, pros::E_MOTOR_GEARSET_06, false);
 
-  pros::Motor rf(16, pros::E_MOTOR_GEARSET_06, true);
+  pros::Motor lf(13, pros::E_MOTOR_GEARSET_06, true);
+  pros::Motor lm(12, pros::E_MOTOR_GEARSET_06, false);
+  pros::Motor lb(11, pros::E_MOTOR_GEARSET_06, true);
+
+  pros::Motor rf(16, pros::E_MOTOR_GEARSET_06, false);
   pros::Motor rm(15, pros::E_MOTOR_GEARSET_06, false);
   pros::Motor rb(14, pros::E_MOTOR_GEARSET_06, true);
 
@@ -96,9 +97,9 @@ void initialize() {
   chassis = new lemlib::Chassis(drivetrain, lateralController,
                                 angularController, odomSensors);
   // callibrate chassis
-  chassis->calibrate();
-  // create a task to print the position to the screen
-  pros::Task screenTask(flywheelScreen);
+  // chassis->calibrate();
+  // create screen task
+  // pros::Task screenTask(flywheelScreen);
   // TODO: different autons have different starting poses
   chassis->setPose(0, 0, 0);
 }
@@ -175,11 +176,28 @@ void opcontrol() {
   while (true) {
     handleButtons();
 
-    int leftstick = filterJoystickInput(controller.get_analog(ANALOG_LEFT_Y));
-    int rightstick = filterJoystickInput(controller.get_analog(ANALOG_RIGHT_Y));
-    // TODO: voltage vs rpm
-    left_drivetrain->move(leftstick);
-    right_drivetrain->move(rightstick);
+    const double DRIVE_SENS = 1.0;
+    const double TURN_SENS = 0.8;
+
+    pros::lcd::set_text(1,
+                        std::to_string(controller.get_analog(ANALOG_LEFT_Y)));
+    pros::lcd::set_text(2,
+                        std::to_string(controller.get_analog(ANALOG_RIGHT_Y)));
+
+    int forward = filterJoystickInput(controller.get_analog(ANALOG_LEFT_Y) *
+                                      DRIVE_SENS); // forward/backward
+    int turn = filterJoystickInput(controller.get_analog(ANALOG_RIGHT_X) *
+                                   TURN_SENS); // turning
+
+    int leftspeed = forward + turn;
+    int rightspeed = forward - turn;
+
+    leftspeed = std::max(-127, std::min(127, leftspeed));
+    rightspeed = std::max(-127, std::min(127, rightspeed));
+
+    left_drivetrain->move(leftspeed);
+    right_drivetrain->move(rightspeed);
+
     pros::delay(20);
   }
 }

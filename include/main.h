@@ -91,5 +91,7 @@ extern pros::Motor_Group *right_motors;
 
 extern pros::Motor *flywheel;
 extern pros::Motor *intake;
+extern pros::ADIDigitalOut wings1;
+extern pros::ADIDigitalOut wings2;
 
 #endif // _PROS_MAIN_H_
