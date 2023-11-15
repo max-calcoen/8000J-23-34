@@ -8,7 +8,7 @@
 bool flywheelOn = false;
 bool wingsOn = false;
 
-pros::ADIDigitalOut wings({{3, 'A'}});
+pros::ADIDigitalOut wings({{3, 'a'}});
 
 void odomScreen() {
   // loop forever
@@ -62,8 +62,5 @@ void handleButtons() {
   // toggle wings
   if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
     wingsOn = !wingsOn;
-    wingsOn = !wingsOn;
   }
-
-  pros::delay(1000);
 }

@@ -61,7 +61,7 @@ void initialize() {
   };
 
   // inertial sensor
-  pros::Imu inertialSensor(18); // port 2
+  pros::Imu inertialSensor(18); // port 18
 
   // odometry struct
   lemlib::OdomSensors_t odomSensors{
@@ -176,7 +176,7 @@ void opcontrol() {
     handleButtons();
 
     const double DRIVE_SENS = 1.0;
-    const double TURN_SENS = 0.8;
+    const double TURN_SENS = 0.7;
 
     pros::lcd::set_text(1,
                         std::to_string(controller.get_analog(ANALOG_LEFT_Y)));
