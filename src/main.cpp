@@ -60,9 +60,8 @@ void initialize() {
       300               // wheel rpm
   };
 
-  // TODO: complete
   // inertial sensor
-  pros::Imu inertialSensor(2); // port 2
+  pros::Imu inertialSensor(18); // port 2
 
   // odometry struct
   lemlib::OdomSensors_t odomSensors{
