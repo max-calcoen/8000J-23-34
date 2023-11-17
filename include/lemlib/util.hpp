@@ -11,8 +11,8 @@
 
 #pragma once
 
-#include <vector>
 #include "lemlib/pose.hpp"
+#include <vector>
 
 namespace lemlib {
 /**
@@ -43,7 +43,8 @@ float radToDeg(float rad);
 float degToRad(float deg);
 
 /**
- * @brief Calculate the error between 2 angles. Useful when calculating the error between 2 headings
+ * @brief Calculate the error between 2 angles. Useful when calculating the
+ * error between 2 headings
  *
  * @param angle1
  * @param angle2
@@ -79,12 +80,14 @@ float avg(std::vector<float> values);
 float ema(float current, float previous, float smooth);
 
 /**
- * @brief Get the signed curvature of a circle that intersects the first pose and the second pose
+ * @brief Get the signed curvature of a circle that intersects the first pose
+ * and the second pose
  *
  * @note The circle will be tangent to the theta value of the first pose
- * @note The curvature is signed. Positive curvature means the circle is going clockwise, negative means
- * counter-clockwise
- * @note Theta has to be in radians and in standard form. That means 0 is right and increases counter-clockwise
+ * @note The curvature is signed. Positive curvature means the circle is going
+ * clockwise, negative means counter-clockwise
+ * @note Theta has to be in radians and in standard form. That means 0 is right
+ * and increases counter-clockwise
  *
  * @param pose the first pose
  * @param other the second pose
