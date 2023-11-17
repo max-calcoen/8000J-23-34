@@ -7,10 +7,10 @@
 // name            coded       tested
 // drive           yes         yes
 // pid             yes         no
-// auton selector  yes         no
+// auton selector  yes         yes
 // path following  no          no
-// intake          yes         no
-// autons          no          no
+// intake          yes         yes
+// wings           yes         yes
 
 #include "main.h"
 #include "autoSelect/selection.h"
