@@ -1,14 +1,9 @@
-// TODO: test
-// flywheel with grapher
-// odom with lemlib
-// drive
-
 // CHECKLIST:
 // name            coded       tested
 // drive           yes         yes
 // pid             yes         no
 // auton selector  yes         yes
-// path following  no          no
+// path following  yes         no
 // intake          yes         yes
 // wings           yes         yes
 
