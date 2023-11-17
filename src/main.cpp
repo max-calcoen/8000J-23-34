@@ -5,8 +5,7 @@
 
 // CHECKLIST:
 // name            coded       tested
-// drive           yes         no
-// flywheel pid    yes         no
+// drive           yes         yes
 // pid             yes         no
 // auton selector  yes         no
 // path following  no          no
@@ -60,7 +59,8 @@ void initialize() {
       right_drivetrain, // right drivetrain motors
       10,               // track width (in) TODO: calculate
       4.0,              // wheel diameter
-      300               // wheel rpm
+      300,              // wheel rpm
+      5.0               // TODO: tune for boomerang
   };
 
   // odometry struct
@@ -92,19 +92,10 @@ void initialize() {
       0    // slew rate
   };
 
-  // create the chassis
+  // create the chassis and calibrate
   chassis = new lemlib::Chassis(drivetrain, lateralController,
                                 angularController, odomSensors);
-  // callibrate chassis
-  if (chassis == nullptr) {
-    controller.rumble(".......");
-  }
   chassis->calibrate();
-  // controller.rumble(".......");
-  // create screen task
-  // pros::Task screenTask(flywheelScreen);
-  // TODO: different autons have different starting poses
-  // chassis->setPose(0, 0, 0);
 }
 
 /**
@@ -191,7 +182,7 @@ void opcontrol() {
                                       DRIVE_SENS); // forward/backward
     int turn = filterJoystickInput(controller.get_analog(ANALOG_RIGHT_X) *
                                    TURN_SENS); // turning
-
+    // arcade drive
     int leftspeed = forward + turn;
     int rightspeed = forward - turn;
 
