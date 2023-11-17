@@ -62,5 +62,6 @@ void handleButtons() {
   // toggle wings
   if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
     wingsOn = !wingsOn;
+    wings.set_value(wingsOn);
   }
 }

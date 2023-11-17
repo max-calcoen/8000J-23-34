@@ -1,8 +1,8 @@
 /**
  * @file include/lemlib/chassis/odom.hpp
  * @author LemLib Team
- * @brief This is the header file for the odom.cpp file. Its not meant to be used directly, only through the chassis
- * class
+ * @brief This is the header file for the odom.cpp file. Its not meant to be
+ * used directly, only through the chassis class
  * @version 0.4.5
  * @date 2023-01-23
  *
@@ -34,7 +34,8 @@ Pose getPose(bool radians = false);
  * @brief Set the Pose of the robot
  *
  * @param pose the new pose
- * @param radians true if theta is in radians, false if in degrees. False by default
+ * @param radians true if theta is in radians, false if in degrees. False by
+ * default
  */
 void setPose(Pose pose, bool radians = false);
 /**

@@ -81,59 +81,59 @@ void setLowestLevel(Level level);
  * @param message the message
  * @param exception the exception
  */
-void log(Level level, const char* message, const char* exception);
+void log(Level level, const char *message, const char *exception);
 /**
  * @brief Logs a message
  *
  * @param level the level of the message
  * @param message the message
  */
-void log(Level level, const char* message);
+void log(Level level, const char *message);
 
 /**
  * @brief Logs a debug message
  *
  * @param message
  */
-void debug(const char* message);
+void debug(const char *message);
 /**
  * @brief Logs an info message
  *
  * @param message
  */
-void info(const char* message);
+void info(const char *message);
 /**
  * @brief Logs a warning message
  *
  * @param message
  */
-void warn(const char* message);
+void warn(const char *message);
 /**
  * @brief Logs an error message
  *
  * @param message
  * @param exception
  */
-void error(const char* message, const char* exception);
+void error(const char *message, const char *exception);
 /**
  * @brief Logs an error message
  *
  * @param message
  */
-void error(const char* message);
+void error(const char *message);
 /**
  * @brief Logs a fatal message
  *
  * @param message
  * @param exception
  */
-void fatal(const char* message, const char* exception);
+void fatal(const char *message, const char *exception);
 /**
  * @brief Logs a fatal message
  *
  * @param message
  */
-void fatal(const char* message);
+void fatal(const char *message);
 
 } // namespace logger
 } // namespace lemlib

@@ -16,6 +16,7 @@
 #include "main.h"
 #include "autoSelect/selection.h"
 #include "autons.h"
+#include "lemlib/chassis/chassis.hpp"
 #include "pros/adi.h"
 #include "robotFunctions.h"
 
@@ -29,6 +30,8 @@ pros::Motor_Group *right_drivetrain = nullptr; // initialize to nullptr
 pros::Motor *intake = new pros::Motor(1, pros::E_MOTOR_GEARSET_06, true);
 pros::Motor *flywheel = new pros::Motor(2, pros::E_MOTOR_GEARSET_06, true);
 
+pros::Imu inertialSensor(17);
+
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -36,10 +39,10 @@ pros::Motor *flywheel = new pros::Motor(2, pros::E_MOTOR_GEARSET_06, true);
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-  // selector::init();
   // // TODO: figure out how to switch from selector in pre-comp to lcd in comp
+  selector::init();
   // TODO: branch selector and make better auton selector
-  pros::lcd::initialize();
+  // pros::lcd::initialize();
 
   pros::Motor lf(13, pros::E_MOTOR_GEARSET_06, true);
   pros::Motor lm(12, pros::E_MOTOR_GEARSET_06, false);
@@ -60,9 +63,6 @@ void initialize() {
       300               // wheel rpm
   };
 
-  // inertial sensor
-  pros::Imu inertialSensor(18); // port 18
-
   // odometry struct
   lemlib::OdomSensors_t odomSensors{
       nullptr, nullptr, nullptr, nullptr,
@@ -72,7 +72,7 @@ void initialize() {
   // TODO: tune
   // forward/backward PID
   lemlib::ChassisController_t lateralController{
-      8,   // kP
+      15,  // kP
       30,  // kD
       1,   // smallErrorRange
       100, // smallErrorTimeout
@@ -96,11 +96,15 @@ void initialize() {
   chassis = new lemlib::Chassis(drivetrain, lateralController,
                                 angularController, odomSensors);
   // callibrate chassis
-  // chassis->calibrate();
+  if (chassis == nullptr) {
+    controller.rumble(".......");
+  }
+  chassis->calibrate();
+  // controller.rumble(".......");
   // create screen task
   // pros::Task screenTask(flywheelScreen);
   // TODO: different autons have different starting poses
-  chassis->setPose(0, 0, 0);
+  // chassis->setPose(0, 0, 0);
 }
 
 /**

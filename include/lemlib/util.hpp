@@ -42,7 +42,8 @@ float radToDeg(float rad);
 float degToRad(float deg);
 
 /**
- * @brief Calculate the error between 2 angles. Useful when calculating the error between 2 headings
+ * @brief Calculate the error between 2 angles. Useful when calculating the
+ * error between 2 headings
  *
  * @param angle1
  * @param angle2
