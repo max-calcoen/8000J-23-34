@@ -12,6 +12,7 @@
 #include "autons.h"
 #include "lemlib/chassis/chassis.hpp"
 #include "pros/adi.h"
+#include "pros/motors.hpp"
 #include "robotFunctions.h"
 
 pros::Controller controller = pros::E_CONTROLLER_MASTER;
@@ -22,7 +23,7 @@ pros::Motor_Group *left_drivetrain = nullptr;  // initialize to nullptr
 pros::Motor_Group *right_drivetrain = nullptr; // initialize to nullptr
 
 pros::Motor *intake = new pros::Motor(1, pros::E_MOTOR_GEARSET_06, true);
-pros::Motor *flywheel = new pros::Motor(2, pros::E_MOTOR_GEARSET_06, true);
+pros::Motor *flywheel = new pros::Motor(2, pros::E_MOTOR_GEARSET_06, false);
 
 pros::Imu inertialSensor(17);
 
@@ -52,10 +53,10 @@ void initialize() {
   lemlib::Drivetrain_t drivetrain{
       left_drivetrain,  // left drivetrain motors
       right_drivetrain, // right drivetrain motors
-      10,               // track width (in) TODO: calculate
+      11.75,            // track width (in) TODO: calculate
       4.0,              // wheel diameter
       300,              // wheel rpm
-      5.0               // TODO: tune for boomerang
+      1.1               // TODO: tune for boomerang
   };
 
   // odometry struct
@@ -64,19 +65,16 @@ void initialize() {
       &inertialSensor // inertial sensor
   };
   // https://lemlib.github.io/LemLib/md_docs_tutorials_3_tuning_and_moving.html
-  // TODO: tune
-  // forward/backward PID
   lemlib::ChassisController_t lateralController{
-      15,  // kP
-      30,  // kD
-      1,   // smallErrorRange
+      25,  // kP
+      35,  // kD
+      0.5, // smallErrorRange
       100, // smallErrorTimeout
-      3,   // largeErrorRange
-      500, // largeErrorTimeout
-      5    // slew rate
+      1.5, // largeErrorRange
+      200, // largeErrorTimeout
+      100  // slew rate
   };
-  // TODO: tune
-  // turning PID
+  // TODO: tune turning PID
   lemlib::ChassisController_t angularController{
       4,   // kP
       40,  // kD
@@ -148,18 +146,27 @@ void autonomous() {
   }
 }
 
+// temp
+double getAverageEfficiency(pros::Motor_Group *motors) {
+  double sum = 0;
+  for (int i = 0; i < motors->get_efficiencies().size(); i++)
+    sum += motors->get_efficiencies()[i];
+  double size = motors->get_efficiencies().size();
+  return sum / size;
+}
+
 /**
- * Runs the operator control code. This function will be started in its own task
- * with the default priority and stack size whenever the robot is enabled via
- * the Field Management System or the VEX Competition Switch in the operator
- * control mode.
+ * Runs the operator control code. This function will be started in its own
+ * task with the default priority and stack size whenever the robot is
+ * enabled via the Field Management System or the VEX Competition Switch in
+ * the operator control mode.
  *
- * If no competition control is connected, this function will run immediately
- * following initialize().
+ * If no competition control is connected, this function will run
+ * immediately following initialize().
  *
  * If the robot is disabled or communications is lost, the
- * operator control task will be stopped. Re-enabling the robot will restart the
- * task, not resume it from where it left off.
+ * operator control task will be stopped. Re-enabling the robot will restart
+ * the task, not resume it from where it left off.
  */
 void opcontrol() {
   while (true) {
@@ -168,15 +175,20 @@ void opcontrol() {
     const double DRIVE_SENS = 1.0;
     const double TURN_SENS = 0.7;
 
-    pros::lcd::set_text(1,
-                        std::to_string(controller.get_analog(ANALOG_LEFT_Y)));
-    pros::lcd::set_text(2,
-                        std::to_string(controller.get_analog(ANALOG_RIGHT_Y)));
+    // pros::lcd::print(
+    //     0, std::to_string(getAverageEfficiency(left_drivetrain)).c_str());
+    // pros::lcd::print(
+    //     1, std::to_string(getAverageEfficiency(right_drivetrain)).c_str());
+    // pros::lcd::print(2, std::to_string(getAverageEfficiency(left_drivetrain)
+    // -
+    //                                    getAverageEfficiency(right_drivetrain))
+    //                         .c_str());
 
-    int forward = filterJoystickInput(controller.get_analog(ANALOG_LEFT_Y) *
-                                      DRIVE_SENS); // forward/backward
-    int turn = filterJoystickInput(controller.get_analog(ANALOG_RIGHT_X) *
-                                   TURN_SENS); // turning
+    int forward =
+        filterJoystickInput(controller.get_analog(ANALOG_LEFT_Y) * DRIVE_SENS,
+                            1.8); // forward/backward
+    int turn = filterJoystickInput(
+        controller.get_analog(ANALOG_RIGHT_X) * TURN_SENS, 1.5); // turning
     // arcade drive
     int leftspeed = forward + turn;
     int rightspeed = forward - turn;
@@ -187,6 +199,6 @@ void opcontrol() {
     left_drivetrain->move(leftspeed);
     right_drivetrain->move(rightspeed);
 
-    pros::delay(20);
+    pros::delay(100);
   }
 }

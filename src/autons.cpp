@@ -14,41 +14,45 @@ void skills() { controller.print(0, 0, "skills!"); }
 
 // https://cdn.discordapp.com/attachments/900591595315929098/1173631172799111199/IMG_4923.mov?ex=6564a834&is=65523334&hm=605aeb72f515a115db4f552baa34d7a58ad6319e95173bac4f3511c8e7496a97&
 void redLeft() {
+  controller.rumble(".");
   // init
-  chassis->setPose(55, -55, 135);
+  chassis->setPose(-51, 57, 135);
 
   // hit matchload near goal with wings
   wings.set_value(true);
-  pros::delay(50);
+  pros::delay(500);
   wings.set_value(false);
-  pros::delay(50);
-
-  // collect middle ball with boomerang
-  intake->move(127);
-  chassis->moveTo(-3, 0, 180, 1e5);
   pros::delay(200);
+
+  // collect middle ball
+  intake->move(127);
+  chassis->turnTo(-8, 8, 100);
+  chassis->moveTo(-7, 7, 135, 1e5);
+  pros::delay(500);
+  controller.print(0, 0, "1");
   // turn to goal
-  chassis->turnTo(-120, 0, 1e5);
+  chassis->turnTo(-35, 7, 1e5);
   // push balls in
-  chassis->moveTo(-45, 0, -90, 10000, true);
+  chassis->moveTo(-35, 7, -90, 1e5, true);
   // halfway through, outtake and trigger wings
-  chassis->waitUntilDist(30);
+  chassis->waitUntilDist(5);
   intake->move(-127);
   wings.set_value(true);
   // wait till movement done
   chassis->waitUntilDist(1e5);
-  wings.set_value(false);
   // move towards next
   chassis->follow(redleft1_txt, 1e5, 15.0, false, false);
-  chassis->turnTo(-3, 24, 1e5);
+  wings.set_value(false);
+  chassis->turnTo(0, 23, 1e5);
   intake->move(127);
-  chassis->moveTo(-3, 24, 240, 1e5, false);
-  // drop off ball to collect other one
-  chassis->turnTo(-37, 44, 1e5);
+  chassis->moveTo(3, 24, 240, 1e5, false);
 
-  chassis->moveTo(-37, 44, 0, 1e5, true);
+  // drop off ball to collect other one
+  chassis->turnTo(-35, 39, 1e5);
+  // no boomerang
+  chassis->moveTo(-35, 39, 0, 1e5, true, true, 0, 0);
   // release ball
-  chassis->waitUntilDist(20);
+  chassis->waitUntilDist(15);
   intake->move(-127);
   // wait until reach
   chassis->waitUntilDist(1e5);
@@ -88,30 +92,28 @@ void redTest() {
   controller.clear();
   controller.print(0, 0, "odom PID + boomerang test");
   controller.rumble("..");
-  pros::delay(500);
   chassis->setPose(0, 0, 0);
   // no boomerang
-  controller.clear();
-  controller.print(0, 0, "forwards 24 inches");
-  pros::delay(500);
+  // controller.clear();
+  controller.print(0, 0, "forwards 36 inches");
+  pros::delay(0);
   controller.rumble(".");
-  chassis->moveTo(0, 24, 0, 1e5);
-
+  chassis->moveTo(0, 36, 0, 1e5);
   // turn
   controller.clear();
   controller.print(0, 0, "180, 2x 90 degree turns");
-  pros::delay(500);
+  pros::delay(0);
   controller.rumble(".");
   chassis->setPose(0, 0, 0);
 
-  // 90 counterclockwise, assuming theta 0 is unit circle 0
-  chassis->turnTo(0, 1, 1e5);
-  pros::delay(500);
+  // 90 clockwise
+  chassis->turnTo(1000, 0, 1e5);
+  pros::delay(0);
   // 180
-  chassis->turnTo(0, -1, 1e5);
-  pros::delay(500);
+  chassis->turnTo(-1000, 0, 1e5);
+  pros::delay(0);
   // 90
-  chassis->turnTo(1, 0, 1e5);
+  chassis->turnTo(0, 1000, 1e5);
 
   // boomerang
   controller.clear();
@@ -119,7 +121,7 @@ void redTest() {
   pros::delay(500);
   controller.rumble(".");
   chassis->setPose(0, 0, 0);
-  chassis->moveTo(100, 100, 90, 1e5);
+  chassis->moveTo(0, 24, 45, 1e5, false, true, 100);
 }
 
 // PATH FOLLOWING TEST

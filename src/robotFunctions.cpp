@@ -4,8 +4,10 @@
 
 bool flywheelOn = false;
 bool wingsOn = false;
+bool blockerOut = false;
 
 pros::ADIDigitalOut wings({{3, 'a'}});
+pros::ADIDigitalOut blocker({{3, 'b'}});
 
 void odomScreen() {
   // loop forever
@@ -24,13 +26,12 @@ void flywheelScreen() {
 }
 
 // https://www.desmos.com/calculator/sdhupmozc2
-double filterJoystickInput(int input) {
+double filterJoystickInput(int input, double scale) {
   const int DEADZONE = 3;
-  const double SCALE = 1.8;
   if (std::abs(input) < DEADZONE)
     return 0;
-  return ((input < 0) ? -1 : 1) * pow(std::abs(input), SCALE) /
-         pow(127, SCALE - 1);
+  return ((input < 0) ? -1 : 1) * pow(std::abs(input), scale) /
+         pow(127, scale - 1);
 }
 
 double flywheelSpeed = 0;
@@ -60,5 +61,10 @@ void handleButtons() {
   if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
     wingsOn = !wingsOn;
     wings.set_value(wingsOn);
+  }
+  // toggle blocker
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+    blockerOut = !blockerOut;
+    blocker.set_value(blockerOut);
   }
 }

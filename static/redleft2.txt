@@ -1,32 +1,47 @@
--37, 44, 86.54
--36.866, 45.995, 83.477
--36.561, 47.97, 80.299
--36.039, 49.899, 76.991
--35.26, 51.738, 73.536
--34.195, 53.428, 69.91
--32.846, 54.9, 68.829
--31.272, 56.13, 71.566
--29.536, 57.12, 77.191
--27.693, 57.894, 84.609
--25.785, 58.492, 82.565
--23.839, 58.951, 79.349
--21.87, 59.304, 75.997
--19.889, 59.574, 72.49
--17.899, 59.776, 68.804
--15.905, 59.928, 64.909
--13.908, 60.037, 60.765
--11.91, 60.117, 56.317
--9.91, 60.17, 51.486
--7.911, 60.205, 46.152
--5.911, 60.227, 40.115
--3.911, 60.238, 32.991
--1.911, 60.242, 23.825
-0.269, 60.242, 0
-0.269, 60.242, 0
-20.269, 60.242, 0
+-36, 36, 99
+-35.915, 37.998, 99
+-35.726, 39.989, 99
+-35.417, 41.964, 99
+-34.972, 43.912, 99
+-34.374, 45.819, 99
+-33.61, 47.667, 96.386
+-32.67, 49.431, 93.647
+-31.533, 51.075, 90.826
+-30.229, 52.588, 87.924
+-28.773, 53.956, 86.615
+-27.185, 55.171, 86.738
+-25.481, 56.215, 88.152
+-23.691, 57.106, 90.451
+-21.84, 57.861, 93.318
+-19.943, 58.493, 96.528
+-18.013, 59.015, 99
+-16.059, 59.439, 99
+-14.088, 59.778, 99
+-12.105, 60.041, 98.334
+-10.115, 60.242, 95.649
+-8.121, 60.388, 92.887
+-6.123, 60.489, 90.04
+-4.124, 60.55, 87.1
+-2.124, 60.577, 84.057
+-0.124, 60.576, 80.9
+1.875, 60.551, 77.615
+3.875, 60.508, 74.184
+5.874, 60.45, 70.586
+7.873, 60.382, 66.795
+9.872, 60.308, 62.776
+11.87, 60.233, 58.481
+13.869, 60.159, 53.845
+15.868, 60.092, 48.769
+17.867, 60.036, 43.1
+19.866, 59.995, 36.563
+21.866, 59.976, 28.567
+23.866, 59.984, 17.183
+25, 60, 0
+25, 60, 0
+44.998, 60.289, 0
 endData
 130.2
 99
 200
--37, 44, -36.569, 59.991, -23.262, 60.257, 0.269, 60.242
-#PATH.JERRYIO-DATA {"appVersion":"0.4.1","format":"LemLib v0.4.x (inch, byte-voltage)","gc":{"robotWidth":11.811023622047244,"robotHeight":11.811023622047244,"robotIsHolonomic":false,"showRobot":false,"uol":2.54,"pointDensity":2,"controlMagnetDistance":0.7750015500031,"fieldImage":{"displayName":"VRC 2024 - Over Under","signature":"VRC 2024 - Over Under","origin":{"__type":"built-in"}}},"paths":[{"segments":[{"controls":[{"uid":"T1YACTKt3o","x":-37,"y":44,"lock":false,"visible":true,"heading":0,"__type":"end-point"},{"uid":"b2MkSXEBsP","x":-36.56938325991189,"y":59.99082232011747,"lock":false,"visible":true,"__type":"control"},{"uid":"hTdpTqNwpd","x":-23.261747430249628,"y":60.25697503671071,"lock":false,"visible":true,"__type":"control"},{"uid":"hXn2828Vme","x":0.2688828789192082,"y":60.242,"lock":false,"visible":true,"heading":90,"__type":"end-point"}],"speedProfiles":[],"uid":"1OENhGbCHb"}],"pc":{"speedLimit":{"minLimit":{"value":0,"label":"0"},"maxLimit":{"value":127,"label":"127"},"step":1,"from":1,"to":99},"bentRateApplicableRange":{"minLimit":{"value":0,"label":"0"},"maxLimit":{"value":4,"label":"4"},"step":0.01,"from":0.58,"to":1.85},"maxDecelerationRate":130.2},"name":"Path","uid":"F26ePo8J8f","lock":false,"visible":true}]}
+-36, 36, -35.579, 67.709, 0.077, 59.449, 25, 60
+#PATH.JERRYIO-DATA {"appVersion":"0.4.1","format":"LemLib v0.4.x (inch, byte-voltage)","gc":{"robotWidth":11.811023622047244,"robotHeight":11.811023622047244,"robotIsHolonomic":false,"showRobot":false,"uol":2.54,"pointDensity":2,"controlMagnetDistance":0.7750015500031,"fieldImage":{"displayName":"VRC 2024 - Over Under","signature":"VRC 2024 - Over Under","origin":{"__type":"built-in"}}},"paths":[{"segments":[{"controls":[{"uid":"T1YACTKt3o","x":-36,"y":36,"lock":false,"visible":true,"heading":0,"__type":"end-point"},{"uid":"b2MkSXEBsP","x":-35.57892804698971,"y":67.70925110132158,"lock":false,"visible":true,"__type":"control"},{"uid":"hTdpTqNwpd","x":0.07674854545675913,"y":59.449339207048446,"lock":false,"visible":true,"__type":"control"},{"uid":"hXn2828Vme","x":25,"y":60,"lock":false,"visible":true,"heading":90,"__type":"end-point"}],"speedProfiles":[],"uid":"1OENhGbCHb"}],"pc":{"speedLimit":{"minLimit":{"value":0,"label":"0"},"maxLimit":{"value":127,"label":"127"},"step":1,"from":1,"to":99},"bentRateApplicableRange":{"minLimit":{"value":0,"label":"0"},"maxLimit":{"value":4,"label":"4"},"step":0.01,"from":0.58,"to":1.85},"maxDecelerationRate":130.2},"name":"Path","uid":"F26ePo8J8f","lock":false,"visible":true}]}
