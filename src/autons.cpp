@@ -54,9 +54,9 @@ void redLeft() {
   chassis->moveTo(3, 24, 240, 1e5, false);
 
   // drop off ball to collect other one
-  chassis->turnTo(-16, 38, 1e5);
+  chassis->turnTo(-36, 36, 1e5);
   // no boomerang
-  chassis->moveTo(-16, 38, 0, 1e5, true, true, 0, 0, 90);
+  chassis->moveTo(-36, 36, 0, 1e5, true, true, 0, 0, 90);
   // release ball
   chassis->waitUntilDist(20);
   intake->move(-127);
@@ -64,7 +64,7 @@ void redLeft() {
   chassis->waitUntilDist(1e5);
   pros::delay(500);
   // reset
-  chassis->setPose(-36, 36, 0);
+  // chassis->setPose(-36, 36, 0);
   // follow path to get other ball
   chassis->follow(redleft2_txt, 1e5, 15, true);
   chassis->waitUntilDist(20);
