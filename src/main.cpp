@@ -25,7 +25,7 @@ pros::Motor_Group *right_drivetrain = nullptr; // initialize to nullptr
 pros::Motor *intake = new pros::Motor(1, pros::E_MOTOR_GEARSET_06, true);
 pros::Motor *flywheel = new pros::Motor(2, pros::E_MOTOR_GEARSET_06, false);
 
-pros::Imu inertialSensor(17);
+pros::Imu inertialSensor(18);
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -66,13 +66,13 @@ void initialize() {
   };
   // https://lemlib.github.io/LemLib/md_docs_tutorials_3_tuning_and_moving.html
   lemlib::ChassisController_t lateralController{
-      25,  // kP
-      35,  // kD
-      0.5, // smallErrorRange
-      100, // smallErrorTimeout
-      1.5, // largeErrorRange
-      200, // largeErrorTimeout
-      100  // slew rate
+      25,   // kP
+      35,   // kD
+      0.75, // smallErrorRange
+      100,  // smallErrorTimeout
+      1.5,  // largeErrorRange
+      150,  // largeErrorTimeout
+      100   // slew rate
   };
   // TODO: tune turning PID
   lemlib::ChassisController_t angularController{
@@ -82,7 +82,7 @@ void initialize() {
       100, // smallErrorTimeout
       3,   // largeErrorRange
       500, // largeErrorTimeout
-      0    // slew rate
+      10   // slew rate
   };
 
   // create the chassis and calibrate

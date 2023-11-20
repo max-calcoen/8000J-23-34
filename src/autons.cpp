@@ -2,7 +2,13 @@
 ASSET(redleft1_txt);
 ASSET(redleft2_txt);
 ASSET(redleft3_txt);
-ASSET(redleft4_txt);
+
+ASSET(redright1_txt);
+ASSET(redright2_txt);
+ASSET(redright3_txt);
+
+ASSET(blueleft1_txt)
+
 ASSET(testpath_txt);
 
 /*
@@ -48,43 +54,88 @@ void redLeft() {
   chassis->moveTo(3, 24, 240, 1e5, false);
 
   // drop off ball to collect other one
-  chassis->turnTo(-35, 39, 1e5);
+  chassis->turnTo(-16, 38, 1e5);
   // no boomerang
-  chassis->moveTo(-35, 39, 0, 1e5, true, true, 0, 0);
+  chassis->moveTo(-16, 38, 0, 1e5, true, true, 0, 0, 90);
   // release ball
-  chassis->waitUntilDist(15);
+  chassis->waitUntilDist(20);
   intake->move(-127);
   // wait until reach
   chassis->waitUntilDist(1e5);
-  intake->move(0);
+  pros::delay(500);
+  // reset
+  chassis->setPose(-36, 36, 0);
   // follow path to get other ball
   chassis->follow(redleft2_txt, 1e5, 15, true);
   chassis->waitUntilDist(20);
   intake->move(127);
   chassis->waitUntilDist(1e5);
+
   // wait for ball to enter intake
   pros::delay(300);
   // back up to other balls
-  chassis->moveTo(-40, 60, 90, 1e5, false, false);
+  chassis->moveTo(-36, 60, 90, 1e5, false, false);
   // spin around
   chassis->turnTo(-60, 60, 1e5);
   // get wings out to poke ball from matchload zone
   wings.set_value(true);
   chassis->follow(redleft3_txt, 1e5, 10, true);
-  // halfway through movement put wings away
-  chassis->waitUntilDist(15);
+  // halfway through movement put wings away and stop intaking
+  chassis->waitUntilDist(5);
+  intake->move(-127);
+  // chassis->waitUntilDist(15);
+  // intake->move(0);
   wings.set_value(false);
+  chassis->waitUntilDist(1e5);
   // push under again
-  chassis->follow(redleft4_txt, 1e5, 10, false);
-  // get wings out to poke ball from matchload zone
-  wings.set_value(true);
-  chassis->follow(redleft3_txt, 1e5, 10, true);
-  // halfway through movement put wings away
-  chassis->waitUntilDist(15);
-  wings.set_value(false);
+  chassis->setPose(0, 0, 0);
+  // move back
+  chassis->moveTo(0, -5, 0, 1e5);
+  // push in
+  chassis->moveTo(0, 5, 0, 1e5);
 }
-void blueLeft() { controller.print(0, 0, "blue left!"); }
-void redRight() { controller.print(0, 0, "red right!"); }
+void redRight() {
+  // init
+  controller.rumble("--");
+  intake->move(127);
+  chassis->setPose(-36, -54, 0);
+  chassis->moveTo(-36, -7, 0, 1e5);
+  // push over
+  chassis->turnTo(3, -7, 1e5);
+  wings.set_value(true);
+  chassis->moveTo(3, -7, 90, 1000);
+  // chassis->follow(redright1_txt, 1e5, 15, true);
+  // chassis->waitUntilDist(10);
+  // wings.set_value(true);
+  // chassis->waitUntilDist(1e5);
+  chassis->follow(redright2_txt, 1e5, 15, true, false);
+  chassis->waitUntilDist(2);
+  wings.set_value(false);
+  chassis->waitUntilDist(1e5);
+  chassis->turnTo(-42, -9, 1e5);
+  chassis->moveTo(-42, -9, -90, 2000, true, true, 0, 0.6, 60);
+  chassis->waitUntilDist(7);
+  intake->move(-127);
+  chassis->waitUntilDist(1e5);
+  chassis->follow(redright3_txt, 1e5, 15, false, false);
+  intake->move(-127);
+  chassis->moveTo(-18, -57, 90, 1e5, false, true, 0, 0, 100);
+}
+void blueLeft() {
+  // init
+
+  chassis->setPose(-48, -56, 0);
+  wings.set_value(true);
+  chassis->turnTo(-60, -56, 1e5, false, false, 70);
+  pros::delay(500);
+  wings.set_value(false);
+  pros::delay(500);
+  chassis->turnTo(-24, -70, 1e5);
+  intake->move(-127);
+
+  chassis->setPose(-48, -56, 140);
+  chassis->follow(blueleft1_txt, 1500, 10);
+}
 void blueRight() { controller.print(0, 0, "blue right!"); }
 
 // ODOM-BASED PID MOVEMENT + BOOMERANG TEST
