@@ -22,7 +22,7 @@ void skills() { controller.print(0, 0, "skills!"); }
 void redLeft() {
   controller.rumble(".");
   // init
-  chassis->setPose(-51, 57, 135);
+  chassis->setPose(-52, 58, 135);
 
   // hit matchload near goal with wings
   wings.set_value(true);
@@ -32,14 +32,14 @@ void redLeft() {
 
   // collect middle ball
   intake->move(127);
-  chassis->turnTo(-8, 8, 100);
-  chassis->moveTo(-7, 7, 135, 1e5);
+  chassis->turnTo(-6.5, 0, 100);
+  chassis->moveTo(-6.5, 0, 135, 1e5);
+  // wait to collect
   pros::delay(500);
-  controller.print(0, 0, "1");
   // turn to goal
-  chassis->turnTo(-35, 7, 1e5);
+  chassis->turnTo(-35, 0, 1e5);
   // push balls in
-  chassis->moveTo(-35, 7, -90, 1e5, true);
+  chassis->moveTo(-35, 0, -90, 1e5, true);
   // halfway through, outtake and trigger wings
   chassis->waitUntilDist(5);
   intake->move(-127);
@@ -49,24 +49,25 @@ void redLeft() {
   // move towards next
   chassis->follow(redleft1_txt, 1e5, 15.0, false, false);
   wings.set_value(false);
-  chassis->turnTo(0, 23, 1e5);
+  chassis->turnTo(0, 24, 1e5);
   intake->move(127);
-  chassis->moveTo(3, 24, 240, 1e5, false);
+  chassis->moveTo(0, 24, 60, 1e5, false);
+  pros::delay(100);
+  chassis->setPose(-8, 24, 60);
 
   // drop off ball to collect other one
   chassis->turnTo(-36, 36, 1e5);
   // no boomerang
-  chassis->moveTo(-36, 36, 0, 1e5, true, true, 0, 0, 90);
+  chassis->moveTo(-36, 36, -60, 1e5, true);
   // release ball
-  chassis->waitUntilDist(20);
+  chassis->waitUntilDist(15);
   intake->move(-127);
   // wait until reach
   chassis->waitUntilDist(1e5);
+  chassis->setPose(-36, 36, -60);
   pros::delay(500);
-  // reset
-  // chassis->setPose(-36, 36, 0);
   // follow path to get other ball
-  chassis->follow(redleft2_txt, 1e5, 15, true);
+  chassis->follow(redleft2_txt, 1e5, 10, true);
   chassis->waitUntilDist(20);
   intake->move(127);
   chassis->waitUntilDist(1e5);
@@ -96,7 +97,6 @@ void redLeft() {
 }
 void redRight() {
   // init
-  controller.rumble("--");
   intake->move(127);
   chassis->setPose(-36, -54, 0);
   chassis->moveTo(-36, -7, 0, 1e5);
@@ -123,18 +123,12 @@ void redRight() {
 }
 void blueLeft() {
   // init
-
-  chassis->setPose(-48, -56, 0);
+  intake->move(127);
   wings.set_value(true);
-  chassis->turnTo(-60, -56, 1e5, false, false, 70);
+  chassis->setPose(36, 53, 0);
+  chassis->turnTo(37, 70, 1e5, false, true);
   pros::delay(500);
   wings.set_value(false);
-  pros::delay(500);
-  chassis->turnTo(-24, -70, 1e5);
-  intake->move(-127);
-
-  chassis->setPose(-48, -56, 140);
-  chassis->follow(blueleft1_txt, 1500, 10);
 }
 void blueRight() { controller.print(0, 0, "blue right!"); }
 

@@ -369,7 +369,8 @@
     "upload_options": {
       "after": "run",
       "description": "Flywheel PROS Project",
-      "icon": "alien"
+      "icon": "alien",
+      "slot": 2
     }
   }
 }

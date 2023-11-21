@@ -23,7 +23,7 @@ pros::Motor_Group *left_drivetrain = nullptr;  // initialize to nullptr
 pros::Motor_Group *right_drivetrain = nullptr; // initialize to nullptr
 
 pros::Motor *intake = new pros::Motor(1, pros::E_MOTOR_GEARSET_06, true);
-pros::Motor *flywheel = new pros::Motor(2, pros::E_MOTOR_GEARSET_06, false);
+pros::Motor *flywheel = new pros::Motor(2, pros::E_MOTOR_GEARSET_06, true);
 
 pros::Imu inertialSensor(18);
 
@@ -88,7 +88,7 @@ void initialize() {
   // create the chassis and calibrate
   chassis = new lemlib::Chassis(drivetrain, lateralController,
                                 angularController, odomSensors);
-  chassis->calibrate();
+  // chassis->calibrate();
 }
 
 /**
