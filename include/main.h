@@ -92,6 +92,6 @@ extern pros::Motor_Group *right_motors;
 extern pros::Motor *flywheel;
 extern pros::Motor *intake;
 extern pros::ADIDigitalOut wings;
-extern pros::ADIDigitalOut blocker;
+extern pros::ADIDigitalOut hang;
 
 #endif // _PROS_MAIN_H_

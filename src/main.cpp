@@ -22,10 +22,10 @@ lemlib::Chassis *chassis = nullptr; // initialize to nullptr
 pros::Motor_Group *left_drivetrain = nullptr;  // initialize to nullptr
 pros::Motor_Group *right_drivetrain = nullptr; // initialize to nullptr
 
-pros::Motor *intake = new pros::Motor(1, pros::E_MOTOR_GEARSET_06, true);
-pros::Motor *flywheel = new pros::Motor(2, pros::E_MOTOR_GEARSET_06, true);
+pros::Motor *intake = new pros::Motor(11, pros::E_MOTOR_GEARSET_06, false);
+pros::Motor *flywheel = new pros::Motor(20, pros::E_MOTOR_GEARSET_06, true);
 
-pros::Imu inertialSensor(18);
+pros::Imu inertialSensor(5);
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -39,13 +39,13 @@ void initialize() {
   // TODO: branch selector and make better auton selector
   // pros::lcd::initialize();
 
-  pros::Motor lf(13, pros::E_MOTOR_GEARSET_06, true);
-  pros::Motor lm(12, pros::E_MOTOR_GEARSET_06, false);
-  pros::Motor lb(11, pros::E_MOTOR_GEARSET_06, true);
+  pros::Motor lf(7, pros::E_MOTOR_GEARSET_06, true);
+  pros::Motor lm(9, pros::E_MOTOR_GEARSET_06, false);
+  pros::Motor lb(8, pros::E_MOTOR_GEARSET_06, true);
 
-  pros::Motor rf(16, pros::E_MOTOR_GEARSET_06, false);
-  pros::Motor rm(15, pros::E_MOTOR_GEARSET_06, false);
-  pros::Motor rb(14, pros::E_MOTOR_GEARSET_06, true);
+  pros::Motor rf(3, pros::E_MOTOR_GEARSET_06, false);
+  pros::Motor rm(2, pros::E_MOTOR_GEARSET_06, true);
+  pros::Motor rb(1, pros::E_MOTOR_GEARSET_06, false);
 
   left_drivetrain = new pros::Motor_Group({lf, lm, lb});
   right_drivetrain = new pros::Motor_Group({rf, rm, rb});
@@ -66,8 +66,8 @@ void initialize() {
   };
   // https://lemlib.github.io/LemLib/md_docs_tutorials_3_tuning_and_moving.html
   lemlib::ChassisController_t lateralController{
-      25,   // kP
-      35,   // kD
+      13,   // kP
+      17,   // kD
       0.75, // smallErrorRange
       100,  // smallErrorTimeout
       1.5,  // largeErrorRange
@@ -88,7 +88,7 @@ void initialize() {
   // create the chassis and calibrate
   chassis = new lemlib::Chassis(drivetrain, lateralController,
                                 angularController, odomSensors);
-  // chassis->calibrate();
+  chassis->calibrate();
 }
 
 /**
@@ -126,19 +126,19 @@ void autonomous() {
     skills();
     break;
   case 1:
-    redLeft();
+    redDefensive();
     break;
   case 2:
-    redRight();
+    redOffensive();
     break;
   case 3:
     redTest();
     break;
   case -1:
-    blueLeft();
+    blueDefensive();
     break;
   case -2:
-    blueRight();
+    blueOffensive();
     break;
   case -3:
     blueTest();

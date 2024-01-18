@@ -1,7 +1,7 @@
 extern void skills();
-extern void redLeft();
-extern void blueLeft();
-extern void redRight();
-extern void blueRight();
+extern void redDefensive();
+extern void blueDefensive();
+extern void redOffensive();
+extern void blueOffensive();
 extern void redTest();
 extern void blueTest();

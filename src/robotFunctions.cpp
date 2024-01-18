@@ -4,10 +4,10 @@
 
 bool flywheelOn = false;
 bool wingsOn = false;
-bool blockerOut = false;
+bool hangUp = false;
 
-pros::ADIDigitalOut wings({{3, 'a'}});
-pros::ADIDigitalOut blocker({{3, 'b'}});
+pros::ADIDigitalOut wings('a');
+pros::ADIDigitalOut hang('h');
 
 void odomScreen() {
   // loop forever
@@ -62,9 +62,9 @@ void handleButtons() {
     wingsOn = !wingsOn;
     wings.set_value(wingsOn);
   }
-  // toggle blocker
+  // toggle hang
   if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
-    blockerOut = !blockerOut;
-    blocker.set_value(blockerOut);
+    hangUp = !hangUp;
+    hang.set_value(hangUp);
   }
 }

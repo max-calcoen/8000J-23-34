@@ -19,8 +19,7 @@ ASSET(testpath_txt);
 void skills() { controller.print(0, 0, "skills!"); }
 
 // https://cdn.discordapp.com/attachments/900591595315929098/1173631172799111199/IMG_4923.mov?ex=6564a834&is=65523334&hm=605aeb72f515a115db4f552baa34d7a58ad6319e95173bac4f3511c8e7496a97&
-void redLeft() {
-  controller.rumble(".");
+void redOffensive() {
   // init
   chassis->setPose(-52, 58, 135);
 
@@ -33,7 +32,7 @@ void redLeft() {
   // collect middle ball
   intake->move(127);
   chassis->turnTo(-6.5, 0, 100);
-  chassis->moveTo(-6.5, 0, 135, 1e5);
+  chassis->moveTo(-6.5, 0, 135, 12000);
   // wait to collect
   pros::delay(500);
   // turn to goal
@@ -95,7 +94,7 @@ void redLeft() {
   // push in
   chassis->moveTo(0, 5, 0, 1e5);
 }
-void redRight() {
+void redDefensive() {
   // init
   intake->move(127);
   chassis->setPose(-36, -54, 0);
@@ -113,7 +112,7 @@ void redRight() {
   wings.set_value(false);
   chassis->waitUntilDist(1e5);
   chassis->turnTo(-42, -9, 1e5);
-  chassis->moveTo(-42, -9, -90, 2000, true, true, 0, 0.6, 60);
+  chassis->moveTo(-42, -9, -90, 500, true, true, 0, 0.6, 60);
   chassis->waitUntilDist(7);
   intake->move(-127);
   chassis->waitUntilDist(1e5);
@@ -121,25 +120,26 @@ void redRight() {
   intake->move(-127);
   chassis->moveTo(-18, -57, 90, 1e5, false, true, 0, 0, 100);
 }
-void blueLeft() {
+
+void blueOffensive() { controller.print(0, 0, "blue right!"); }
+void blueDefensive() {
   // init
   intake->move(127);
   wings.set_value(true);
+  pros::delay(500);
   chassis->setPose(36, 53, 0);
   chassis->turnTo(37, 70, 1e5, false, true);
   pros::delay(500);
   wings.set_value(false);
 }
-void blueRight() { controller.print(0, 0, "blue right!"); }
-
 // ODOM-BASED PID MOVEMENT + BOOMERANG TEST
 void redTest() {
   controller.clear();
   controller.print(0, 0, "odom PID + boomerang test");
-  controller.rumble("..");
+  controller.rumble("....");
   chassis->setPose(0, 0, 0);
   // no boomerang
-  // controller.clear();
+  controller.clear();
   controller.print(0, 0, "forwards 36 inches");
   pros::delay(0);
   controller.rumble(".");
