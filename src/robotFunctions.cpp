@@ -43,8 +43,12 @@ void handleButtons() {
     if (flywheelOn) {
       flywheel->move(0);
     } else {
+      int speed = 127;
+      if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
+        speed = -127;
+      }
       // MAX SPEED
-      flywheel->move(127);
+      flywheel->move(speed);
     }
     flywheelOn = !flywheelOn;
   }

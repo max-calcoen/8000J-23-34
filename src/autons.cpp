@@ -1,4 +1,5 @@
 #include "main.h"
+#include "pros/misc.h"
 ASSET(redleft1_txt);
 ASSET(redleft2_txt);
 ASSET(redleft3_txt);
@@ -10,13 +11,15 @@ ASSET(redright3_txt);
 ASSET(blueleft1_txt)
 
 ASSET(testpath_txt);
+ASSET(skills1_txt);
+ASSET(skills2_txt);
+ASSET(skills3_txt);
+ASSET(skills4_txt);
 
 /*
  * helpful resources
  * path planner: https://path.jerryio.com/
  */
-
-void skills() { controller.print(0, 0, "skills!"); }
 
 // https://cdn.discordapp.com/attachments/900591595315929098/1173631172799111199/IMG_4923.mov?ex=6564a834&is=65523334&hm=605aeb72f515a115db4f552baa34d7a58ad6319e95173bac4f3511c8e7496a97&
 void redOffensive() {
@@ -31,16 +34,16 @@ void redOffensive() {
 
   // collect middle ball
   intake->move(127);
-  chassis->turnTo(-6.5, 0, 100);
-  chassis->moveTo(-6.5, 0, 135, 12000);
+  chassis->turnTo(-6.5, 1, 100);
+  chassis->moveTo(-6.5, 1, 135, 12000);
   // wait to collect
   pros::delay(500);
   // turn to goal
-  chassis->turnTo(-35, 0, 1e5);
+  chassis->turnTo(-37, 0, 1e5);
   // push balls in
-  chassis->moveTo(-35, 0, -90, 1500, true);
+  chassis->moveTo(-37, 0, -90, 1500, true);
   // halfway through, outtake and trigger wings
-  chassis->waitUntilDist(5);
+  chassis->waitUntilDist(3);
   intake->move(-127);
   wings.set_value(true);
   // wait till movement done
@@ -61,41 +64,20 @@ void redOffensive() {
   chassis->turnTo(-36, 36, 1e5);
   // no boomerang
   chassis->moveTo(-36, 36, -60, 1e5, true);
-  // release ball
+  // release ball (COMMENTED OUT)
   chassis->waitUntilDist(15);
-  intake->move(-127);
+  // intake->move(-127);
   // wait until reach
   chassis->waitUntilDist(1e5);
+  // sweep balls
   chassis->setPose(-36, 36, -60);
-  pros::delay(500);
-  // follow path to get other ball
-  chassis->follow(redleft2_txt, 1e5, 10, true);
-  chassis->waitUntilDist(20);
-  intake->move(127);
-  chassis->waitUntilDist(1e5);
-
-  // wait for ball to enter intake
-  pros::delay(300);
-  // back up to other balls
-  chassis->moveTo(-36, 60, 90, 1e5, false, false);
-  // spin around
-  chassis->turnTo(-60, 60, 1e5);
-  // get wings out to poke ball from matchload zone
-  wings.set_value(true);
-  chassis->follow(redleft3_txt, 2500, 10, true);
-  // halfway through movement put wings away and stop intaking
-  chassis->waitUntilDist(5);
+  chassis->follow(redleft2_txt, 1.5e3, 10, true);
+  chassis->waitUntilDist(6);
+  // outtake to push under
   intake->move(-127);
-  // chassis->waitUntilDist(15);
-  // intake->move(0);
-  wings.set_value(false);
   chassis->waitUntilDist(1e5);
-  // push under again
-  chassis->setPose(0, 0, 0);
-  // move back
-  chassis->moveTo(0, -5, 0, 1e5);
-  // push in
-  chassis->moveTo(0, 5, 0, 1e5);
+  // back up just in case
+  chassis->moveTo(-60, 53, 180, 1e5, false, false, 0, 0.6, 30);
 }
 void redDefensive() {
   // init
@@ -106,17 +88,13 @@ void redDefensive() {
   chassis->turnTo(3, -7, 1e5);
   wings.set_value(true);
   chassis->moveTo(3, -7, 90, 1000);
-  // chassis->follow(redright1_txt, 1e5, 15, true);
-  // chassis->waitUntilDist(10);
-  // wings.set_value(true);
-  // chassis->waitUntilDist(1e5);
   chassis->follow(redright2_txt, 1e5, 15, true, false);
   chassis->waitUntilDist(2);
   wings.set_value(false);
   chassis->waitUntilDist(1e5);
-  chassis->turnTo(-42, -9, 1e5);
-  chassis->moveTo(-42, -9, -90, 500, true, true, 0, 0.6, 60);
-  chassis->waitUntilDist(7);
+  chassis->turnTo(-45, -13, 1e5);
+  chassis->moveTo(-45, -13, -90, 500, true, true, 0, 0.6, 60);
+  chassis->waitUntilDist(2);
   intake->move(-127);
   chassis->waitUntilDist(1e5);
   chassis->follow(redright3_txt, 1e5, 15, false, false);
@@ -178,4 +156,47 @@ void blueTest() {
 
   chassis->follow(testpath_txt, 1e5, 10, false);
   controller.rumble(".");
+}
+
+// skills
+void skills() {
+  // init
+  chassis->setPose(48, 56, 242);
+  // back up a tiny bit
+  chassis->moveTo(51.226, 57.715, 242, 150, true, false, 0, 0.6, 30);
+  flywheel->move(-127);
+  // wait while shooting
+  pros::delay(40e3);
+  flywheel->move(0);
+  // go to other side
+  intake->move(-127);
+  chassis->follow(skills1_txt, 1e5, 10);
+  // push under goal
+  intake->move(-127);
+  chassis->follow(skills2_txt, 1e3, 10, true);
+  chassis->waitUntilDist(5);
+  wings.set_value(true);
+  chassis->waitUntilDist(10);
+  wings.set_value(false);
+  chassis->waitUntilDist(1e5);
+  // back up from goal
+  chassis->moveTo(-60, 32, 180, 1e5, false, false);
+  // swing around
+  chassis->turnTo(-24, 32, 2e3);
+  chassis->moveTo(-24, 32, 90, 1e5);
+  chassis->follow(skills3_txt, 5e3, 10, true);
+  chassis->waitUntilDist(5);
+  wings.set_value(true);
+  chassis->waitUntilDist(1e5);
+  // back up
+  chassis->moveTo(-10, 8, 180, 2e3, false, false);
+  wings.set_value(false);
+  // swing again
+  chassis->turnTo(-8, -8, 1e5);
+  chassis->follow(skills4_txt, 2e3, 10, true);
+  chassis->waitUntilDist(3);
+  wings.set_value(true);
+  chassis->waitUntilDist(1e5);
+  // back up just in case
+  chassis->moveTo(0, -16, 270, 1e5, false, false);
 }

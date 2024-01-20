@@ -78,10 +78,10 @@ void initialize() {
   lemlib::ChassisController_t angularController{
       4,   // kP
       40,  // kD
-      1,   // smallErrorRange
+      1.5, // smallErrorRange
       100, // smallErrorTimeout
-      3,   // largeErrorRange
-      500, // largeErrorTimeout
+      3.5, // largeErrorRange
+      300, // largeErrorTimeout
       10   // slew rate
   };
 
