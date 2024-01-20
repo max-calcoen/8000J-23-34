@@ -23,7 +23,7 @@ pros::Motor_Group *left_drivetrain = nullptr;  // initialize to nullptr
 pros::Motor_Group *right_drivetrain = nullptr; // initialize to nullptr
 
 pros::Motor *intake = new pros::Motor(11, pros::E_MOTOR_GEARSET_06, false);
-pros::Motor *flywheel = new pros::Motor(20, pros::E_MOTOR_GEARSET_06, true);
+pros::Motor *flywheel = new pros::Motor(19, pros::E_MOTOR_GEARSET_06, true);
 
 pros::Imu inertialSensor(5);
 
@@ -169,30 +169,36 @@ double getAverageEfficiency(pros::Motor_Group *motors) {
  * the task, not resume it from where it left off.
  */
 void opcontrol() {
+  int prevLeftSpeed = 0;
+  const int MAX_ACCEL = 50; // Maximum acceleration per cycle
+
   while (true) {
     handleButtons();
 
     const double DRIVE_SENS = 1.0;
     const double TURN_SENS = 0.7;
 
-    // pros::lcd::print(
-    //     0, std::to_string(getAverageEfficiency(left_drivetrain)).c_str());
-    // pros::lcd::print(
-    //     1, std::to_string(getAverageEfficiency(right_drivetrain)).c_str());
-    // pros::lcd::print(2, std::to_string(getAverageEfficiency(left_drivetrain)
-    // -
-    //                                    getAverageEfficiency(right_drivetrain))
-    //                         .c_str());
+    int left = controller.get_analog(ANALOG_LEFT_Y);
+    int right = controller.get_analog(ANALOG_RIGHT_X);
 
-    int forward =
-        filterJoystickInput(controller.get_analog(ANALOG_LEFT_Y) * DRIVE_SENS,
-                            1.8); // forward/backward
-    int turn = filterJoystickInput(
-        controller.get_analog(ANALOG_RIGHT_X) * TURN_SENS, 1.5); // turning
-    // arcade drive
+    int targetLeftSpeed = left * DRIVE_SENS;
+    int targetTurnSpeed = right * TURN_SENS;
+
+    // calculate desired speeds
+    int forward = filterJoystickInput(targetLeftSpeed, 1.8);
+    int turn = filterJoystickInput(targetTurnSpeed, 1.5);
+
+    // apply ramping to the forward speed
+    int accel = forward - prevLeftSpeed;
+    if (abs(accel) > MAX_ACCEL) {
+      forward = prevLeftSpeed + (accel > 0 ? MAX_ACCEL : -MAX_ACCEL);
+    }
+
+    // arcade drive calculations
     int leftspeed = forward + turn;
     int rightspeed = forward - turn;
 
+    // limit speeds to valid range
     leftspeed = std::max(-127, std::min(127, leftspeed));
     rightspeed = std::max(-127, std::min(127, rightspeed));
 
@@ -200,5 +206,6 @@ void opcontrol() {
     right_drivetrain->move(rightspeed);
 
     pros::delay(100);
+    prevLeftSpeed = forward;
   }
 }

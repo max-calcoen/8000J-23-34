@@ -38,20 +38,23 @@ void redOffensive() {
   // turn to goal
   chassis->turnTo(-35, 0, 1e5);
   // push balls in
-  chassis->moveTo(-35, 0, -90, 1e5, true);
+  chassis->moveTo(-35, 0, -90, 1500, true);
   // halfway through, outtake and trigger wings
   chassis->waitUntilDist(5);
   intake->move(-127);
   wings.set_value(true);
   // wait till movement done
   chassis->waitUntilDist(1e5);
+
   // move towards next
   chassis->follow(redleft1_txt, 1e5, 15.0, false, false);
   wings.set_value(false);
   chassis->turnTo(0, 24, 1e5);
   intake->move(127);
-  chassis->moveTo(0, 24, 60, 1e5, false);
+  // collect
+  chassis->moveTo(0, 24, 60, 1500, false);
   pros::delay(100);
+  // reset on barrier
   chassis->setPose(-8, 24, 60);
 
   // drop off ball to collect other one
@@ -79,7 +82,7 @@ void redOffensive() {
   chassis->turnTo(-60, 60, 1e5);
   // get wings out to poke ball from matchload zone
   wings.set_value(true);
-  chassis->follow(redleft3_txt, 1e5, 10, true);
+  chassis->follow(redleft3_txt, 2500, 10, true);
   // halfway through movement put wings away and stop intaking
   chassis->waitUntilDist(5);
   intake->move(-127);
