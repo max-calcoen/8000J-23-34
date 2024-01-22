@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "Berk Flywheel",
+    "project_name": "Utah Flywheel",
     "target": "v5",
     "templates": {
       "Graphy": {
@@ -368,8 +368,8 @@
     },
     "upload_options": {
       "after": "run",
-      "description": "Flywheel PROS Project",
-      "icon": "alien",
+      "description": "8000J On Top",
+      "icon": "ufo",
       "slot": 1
     }
   }
