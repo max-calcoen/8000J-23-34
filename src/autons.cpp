@@ -21,7 +21,6 @@ ASSET(skills4_txt);
  * path planner: https://path.jerryio.com/
  */
 
-// https://cdn.discordapp.com/attachments/900591595315929098/1173631172799111199/IMG_4923.mov?ex=6564a834&is=65523334&hm=605aeb72f515a115db4f552baa34d7a58ad6319e95173bac4f3511c8e7496a97&
 void redOffensive() {
   // init
   chassis->setPose(-52, 58, 135);
@@ -92,14 +91,21 @@ void redDefensive() {
   chassis->waitUntilDist(2);
   wings.set_value(false);
   chassis->waitUntilDist(1e5);
-  chassis->turnTo(-45, -13, 1e5);
-  chassis->moveTo(-45, -13, -90, 500, true, true, 0, 0.6, 60);
-  chassis->waitUntilDist(2);
+  chassis->turnTo(-35, -13, 1e5);
+  pros::delay(300);
   intake->move(-127);
-  chassis->waitUntilDist(1e5);
+  chassis->moveTo(-35, -13, -90, 1e5, false, true, 0, 0.6, 60);
+  // let ball roll to goal
+  pros::delay(1000);
+  chassis->turnTo(0, -13, 1e5);
+  // back up into goal
+  chassis->moveTo(-38, -13, 90, 1500, false, false, 0, 0.6, 30);
+  // move back
+  chassis->moveTo(-36, -13, 90, 1e5);
+  chassis->turnTo(-90, -13, 2000);
   chassis->follow(redright3_txt, 1e5, 15, false, false);
   intake->move(-127);
-  chassis->moveTo(-18, -57, 90, 1e5, false, true, 0, 0, 100);
+  chassis->moveTo(-14, -57, 90, 1e5, false, true, 0, 0, 100);
 }
 
 void blueOffensive() { controller.print(0, 0, "blue right!"); }

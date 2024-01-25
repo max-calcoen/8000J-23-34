@@ -368,7 +368,7 @@
     },
     "upload_options": {
       "after": "run",
-      "description": "8000J On Top",
+      "description": "8000J",
       "icon": "ufo",
       "slot": 1
     }

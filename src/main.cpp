@@ -34,7 +34,7 @@ pros::Imu inertialSensor(5);
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-  // // TODO: figure out how to switch from selector in pre-comp to lcd in comp
+  // TODO: figure out how to switch from selector in pre-comp to lcd in comp
   selector::init();
   // TODO: branch selector and make better auton selector
   // pros::lcd::initialize();
@@ -53,7 +53,7 @@ void initialize() {
   lemlib::Drivetrain_t drivetrain{
       left_drivetrain,  // left drivetrain motors
       right_drivetrain, // right drivetrain motors
-      11.75,            // track width (in) TODO: calculate
+      11.5,             // track width (in) TODO: calculate
       4.0,              // wheel diameter
       300,              // wheel rpm
       1.1               // TODO: tune for boomerang
@@ -144,15 +144,6 @@ void autonomous() {
     blueTest();
     break;
   }
-}
-
-// temp
-double getAverageEfficiency(pros::Motor_Group *motors) {
-  double sum = 0;
-  for (int i = 0; i < motors->get_efficiencies().size(); i++)
-    sum += motors->get_efficiencies()[i];
-  double size = motors->get_efficiencies().size();
-  return sum / size;
 }
 
 /**
