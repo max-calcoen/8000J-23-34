@@ -70,7 +70,7 @@ void redOffensive() {
   chassis->waitUntilDist(1e5);
   // sweep balls
   chassis->setPose(-36, 36, -60);
-  chassis->follow(redleft2_txt, 1.5e3, 10, true);
+  chassis->follow(redleft2_txt, 2000, 10, true);
   chassis->waitUntilDist(6);
   // outtake to push under
   intake->move(-127);
@@ -94,15 +94,16 @@ void redDefensive() {
   chassis->turnTo(-35, -13, 1e5);
   pros::delay(300);
   intake->move(-127);
-  chassis->moveTo(-35, -13, -90, 1e5, false, true, 0, 0.6, 60);
+  chassis->moveTo(-34, -13, -90, 1e5, false, true, 0, 0.6, 60);
   // let ball roll to goal
   pros::delay(1000);
   chassis->turnTo(0, -13, 1e5);
   // back up into goal
-  chassis->moveTo(-38, -13, 90, 1500, false, false, 0, 0.6, 30);
+  chassis->moveTo(-45, -13, 90, 1500, false, false, 0, 0.6, 30);
   // move back
   chassis->moveTo(-36, -13, 90, 1e5);
   chassis->turnTo(-90, -13, 2000);
+  // cool s curve to touch bar
   chassis->follow(redright3_txt, 1e5, 15, false, false);
   intake->move(-127);
   chassis->moveTo(-14, -57, 90, 1e5, false, true, 0, 0, 100);
