@@ -82,11 +82,12 @@ void redDefensive() {
   // init
   intake->move(127);
   chassis->setPose(-36, -54, 0);
-  chassis->moveTo(-36, -7, 0, 1e5);
+  chassis->moveTo(-36, -10, 0, 1e5);
   // push over
-  chassis->turnTo(3, -7, 1e5);
+  chassis->turnTo(-1, -10, 1e5);
   wings.set_value(true);
-  chassis->moveTo(3, -7, 90, 1000);
+  chassis->moveTo(-1, -10, 90, 1500, false, true, 10000.0);
+  chassis->setPose(-1, -10, 90);
   chassis->follow(redright2_txt, 1e5, 15, true, false);
   chassis->waitUntilDist(2);
   wings.set_value(false);
@@ -94,7 +95,7 @@ void redDefensive() {
   chassis->turnTo(-35, -13, 1e5);
   pros::delay(300);
   intake->move(-127);
-  chassis->moveTo(-34, -13, -90, 1e5, false, true, 0, 0.6, 60);
+  chassis->moveTo(-32, -13, -90, 1e5, false, true, 0, 0.6, 60);
   // let ball roll to goal
   pros::delay(1000);
   chassis->turnTo(0, -13, 1e5);
@@ -103,6 +104,7 @@ void redDefensive() {
   // move back
   chassis->moveTo(-36, -13, 90, 1e5);
   chassis->turnTo(-90, -13, 2000);
+  return;
   // cool s curve to touch bar
   chassis->follow(redright3_txt, 1e5, 15, false, false);
   intake->move(-127);

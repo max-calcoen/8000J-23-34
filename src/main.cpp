@@ -66,12 +66,12 @@ void initialize() {
   };
   // https://lemlib.github.io/LemLib/md_docs_tutorials_3_tuning_and_moving.html
   lemlib::ChassisController_t lateralController{
-      13,   // kP
-      17,   // kD
+      30,   // kP
+      50,   // kD
       0.75, // smallErrorRange
-      100,  // smallErrorTimeout
+      75,   // smallErrorTimeout
       1.5,  // largeErrorRange
-      150,  // largeErrorTimeout
+      100,  // largeErrorTimeout
       100   // slew rate
   };
   // TODO: tune turning PID
@@ -79,9 +79,9 @@ void initialize() {
       4,   // kP
       40,  // kD
       1.5, // smallErrorRange
-      100, // smallErrorTimeout
+      50,  // smallErrorTimeout
       3.5, // largeErrorRange
-      300, // largeErrorTimeout
+      150, // largeErrorTimeout
       10   // slew rate
   };
 
