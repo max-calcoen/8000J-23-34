@@ -16,6 +16,8 @@ ASSET(skills2_txt);
 ASSET(skills3_txt);
 ASSET(skills4_txt);
 
+ASSET(lastmin_txt)
+
 /*
  * helpful resources
  * path planner: https://path.jerryio.com/
@@ -79,6 +81,14 @@ void redOffensive() {
   chassis->moveTo(-60, 53, 180, 1e5, false, false, 0, 0.6, 30);
 }
 void redDefensive() {
+  chassis->setPose(-36, -54, 0);
+  intake->move(-127);
+  chassis->follow(lastmin_txt, 1e5, 10, true);
+  chassis->waitUntilDist(24);
+  wings.set_value(true);
+  chassis->waitUntilDist(1e5);
+  wings.set_value(false);
+  return;
   // init
   intake->move(127);
   chassis->setPose(-36, -54, 0);
