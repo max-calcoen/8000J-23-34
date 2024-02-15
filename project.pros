@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "Utah Flywheel",
+    "project_name": "Google Kicker",
     "target": "v5",
     "templates": {
       "Graphy": {
@@ -369,7 +369,7 @@
     "upload_options": {
       "after": "screen",
       "description": "8000J",
-      "icon": "ufo",
+      "icon": "robot",
       "slot": 1
     }
   }

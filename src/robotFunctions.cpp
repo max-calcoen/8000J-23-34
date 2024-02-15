@@ -2,12 +2,15 @@
 #include "main.h"
 #include "pros/misc.h"
 
-bool flywheelOn = false;
-bool wingsOn = false;
+bool frontWingsOn = false;
+bool backLeftWingOn = false;
+bool backRightWingOn = false;
 bool hangUp = false;
-
-pros::ADIDigitalOut wings('a');
-pros::ADIDigitalOut hang('h');
+// TODO: config ports
+pros::ADIDigitalOut front_wings('A');
+pros::ADIDigitalOut hang('H');
+pros::ADIDigitalOut back_wing_left('G');
+pros::ADIDigitalOut back_wing_right('F');
 
 void odomScreen() {
   // loop forever
@@ -21,10 +24,6 @@ void odomScreen() {
   }
 }
 
-void flywheelScreen() {
-  pros::lcd::print(0, "flywheel: %f", flywheel->get_actual_velocity());
-}
-
 // https://www.desmos.com/calculator/sdhupmozc2
 double filterJoystickInput(int input, double scale) {
   const int DEADZONE = 3;
@@ -34,37 +33,28 @@ double filterJoystickInput(int input, double scale) {
          pow(127, scale - 1);
 }
 
-double flywheelSpeed = 0;
-double currFlywheelSpeed = 0;
-
 void handleButtons() {
-  // toggle flywhel
-  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-    if (flywheelOn) {
-      flywheel->move(0);
-    } else {
-      int speed = 127;
-      if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
-        speed = -127;
-      }
-      // MAX SPEED
-      flywheel->move(speed);
-    }
-    flywheelOn = !flywheelOn;
-  }
   // hold r1 for outtake
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
-    intake->move(-127);
+    intake = -127;
   else
-    intake->move(0);
+    intake = 0;
   // hold r2 for intake (override outtake)
   if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
-    intake->move(127);
+    intake = 127;
 
   // toggle wings
   if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
-    wingsOn = !wingsOn;
-    wings.set_value(wingsOn);
+    frontWingsOn = !frontWingsOn;
+    front_wings.set_value(frontWingsOn);
+  }
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+    backLeftWingOn = !backLeftWingOn;
+    back_wing_left.set_value(backLeftWingOn);
+  }
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
+    backRightWingOn = !backRightWingOn;
+    back_wing_left.set_value(backRightWingOn);
   }
   // toggle hang
   if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
