@@ -84,10 +84,12 @@ void opcontrol(void);
 // global vars
 extern pros::Controller controller;
 
-extern lemlib::Chassis *chassis;
+extern lemlib::Chassis *compChassis;
+extern lemlib::Chassis *skillsChassis;
 
 extern pros::Motor_Group *left_motors;
 extern pros::Motor_Group *right_motors;
+extern pros::Motor_Group *kicker;
 
 extern pros::Motor intake;
 extern pros::ADIDigitalOut front_wings;

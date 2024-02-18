@@ -367,7 +367,7 @@
       }
     },
     "upload_options": {
-      "after": "screen",
+      "after": "run",
       "description": "8000J",
       "icon": "robot",
       "slot": 1

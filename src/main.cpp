@@ -9,24 +9,30 @@
 
 pros::Controller controller = pros::E_CONTROLLER_MASTER;
 
-lemlib::Chassis *chassis = nullptr;       // initialize to nullptr
+lemlib::Chassis *compChassis = nullptr;   // initialize to nullptr
 lemlib::Chassis *skillsChassis = nullptr; // initialize to nullptr
 
 pros::Motor_Group *left_drivetrain = nullptr;  // initialize to nullptr
 pros::Motor_Group *right_drivetrain = nullptr; // initialize to nullptr
 
-// TODO: configure ports
 pros::Motor intake(14, pros::E_MOTOR_GEARSET_06, true);
-pros::Motor kicker1(19, pros::E_MOTOR_GEARSET_18, false);
-pros::Motor kicker2(13, pros::E_MOTOR_GEARSET_18, false);
+pros::Motor kicker1(18, pros::E_MOTOR_GEARSET_18, true);
+pros::Motor kicker2(13, pros::E_MOTOR_GEARSET_18, true);
 pros::Motor_Group *kicker = new pros::Motor_Group({kicker1, kicker2});
 
 pros::Imu inertialSensor(11);
 pros::Rotation *odomVertRotation = new pros::Rotation(7);
-pros::Rotation *odomHoriRotation = new pros::Rotation(4);
+pros::Rotation *odomHoriRotation = new pros::Rotation(19);
 // TODO: measure distance
-lemlib::TrackingWheel odomVert(odomVertRotation, 2.75, 0, 1);
-lemlib::TrackingWheel odomHori(odomHoriRotation, 2.75, 0, 1);
+lemlib::TrackingWheel odomVert(odomVertRotation, 2.75, -0.25, 1);
+lemlib::TrackingWheel odomHori(odomHoriRotation, 2.75, -1.5, 1);
+
+pros::Task screen([] {
+  while (true) {
+    odomScreen();
+    pros::delay(10);
+  }
+});
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -35,9 +41,11 @@ lemlib::TrackingWheel odomHori(odomHoriRotation, 2.75, 0, 1);
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
+  screen.suspend();
   selector::init();
+  // temp?
+  screen.resume();
 
-  // TODO: configure ports and reverse bools
   pros::Motor lf(1, pros::E_MOTOR_GEARSET_06, true);
   pros::Motor lm(2, pros::E_MOTOR_GEARSET_06, true);
   pros::Motor lb(3, pros::E_MOTOR_GEARSET_06, true);
@@ -52,49 +60,46 @@ void initialize() {
   lemlib::Drivetrain_t drivetrain{
       left_drivetrain,  // left drivetrain motors
       right_drivetrain, // right drivetrain motors
-      11.5,             // track width (in) TODO: calculate
+      10.7,             // track width (in) TODO: calculate
       2.75,             // wheel diameter
       450,              // wheel rpm
-      1.1               // TODO: tune for boomerang
+      30,               // chase power
   };
 
   // no tracking wheels
-  lemlib::OdomSensors_t odomSensors{
-      nullptr, nullptr, nullptr, nullptr,
-      &inertialSensor // inertial sensor
-  };
-  lemlib::OdomSensors_t skillsOdomSensors{
-      &odomVert, nullptr, &odomHori, nullptr,
-      &inertialSensor // inertial sensor
-  };
+  lemlib::OdomSensors_t odomSensors{nullptr, nullptr, nullptr, nullptr,
+                                    &inertialSensor};
+  lemlib::OdomSensors_t skillsOdomSensors{&odomVert, nullptr, &odomHori,
+                                          nullptr, &inertialSensor};
 
   // https://lemlib.github.io/LemLib/md_docs_tutorials_3_tuning_and_moving.html
-  // TODO: tune
   lemlib::ChassisController_t lateralController{
       30,   // kP
-      50,   // kD
-      0.75, // smallErrorRange
-      75,   // smallErrorTimeout
-      1.5,  // largeErrorRange
-      100,  // largeErrorTimeout
-      100   // slew rate
+      15,   // kD
+      0.25, // smallErrorRange
+      100,  // smallErrorTimeout
+      0.75, // largeErrorRange
+      200,  // largeErrorTimeout
+      20    // slew rate
   };
   lemlib::ChassisController_t angularController{
-      4,   // kP
-      40,  // kD
+      2.5, // kP
+      4,   // kD
       1.5, // smallErrorRange
-      50,  // smallErrorTimeout
-      3.5, // largeErrorRange
-      150, // largeErrorTimeout
-      10   // slew rate
+      150, // smallErrorTimeout
+      4.0, // largeErrorRange
+      250, // largeErrorTimeout
+      30   // slew rate
   };
 
   // create the chassis and calibrate
-  chassis = new lemlib::Chassis(drivetrain, lateralController,
-                                angularController, odomSensors);
+  compChassis = new lemlib::Chassis(drivetrain, lateralController,
+                                    angularController, odomSensors);
+
   skillsChassis = new lemlib::Chassis(drivetrain, lateralController,
                                       angularController, skillsOdomSensors);
-  chassis->calibrate();
+  compChassis->calibrate();
+  // skillsChassis->calibrate();
 }
 
 /**
@@ -167,6 +172,8 @@ void autonomous() {
  */
 void opcontrol() {
   int prevLeftSpeed = 0;
+  right_drivetrain->set_brake_modes(pros::E_MOTOR_BRAKE_COAST);
+  left_drivetrain->set_brake_modes(pros::E_MOTOR_BRAKE_COAST);
 
   while (true) {
     handleButtons();
@@ -182,7 +189,7 @@ void opcontrol() {
 
     // TODO: tune
     int forward = filterJoystickInput(targetLeftSpeed, 1);
-    int turn = filterJoystickInput(targetTurnSpeed, 1);
+    int turn = filterJoystickInput(targetTurnSpeed, 1.6);
 
     // arcade drive calculations
     int leftspeed = forward + turn;

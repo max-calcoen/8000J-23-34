@@ -5,21 +5,22 @@
 bool frontWingsOn = false;
 bool backLeftWingOn = false;
 bool backRightWingOn = false;
+bool kickerStatus = false;
 bool hangUp = false;
 // TODO: config ports
 pros::ADIDigitalOut front_wings('A');
-pros::ADIDigitalOut hang('H');
 pros::ADIDigitalOut back_wing_left('G');
 pros::ADIDigitalOut back_wing_right('F');
+pros::ADIDigitalOut hang('H');
 
 void odomScreen() {
   // loop forever
   while (true) {
-    lemlib::Pose pose =
-        chassis->getPose(); // get the current position of the robot
-    pros::lcd::print(0, "x: %f", pose.x);           // print the x position
-    pros::lcd::print(1, "y: %f", pose.y);           // print the y position
-    pros::lcd::print(2, "heading: %f", pose.theta); // print the heading
+    lemlib::Pose currPose =
+        skillsChassis->getPose(); // get the current position of the robot
+    pros::lcd::print(0, "x: %f", currPose.x);           // print the x position
+    pros::lcd::print(1, "y: %f", currPose.y);           // print the y position
+    pros::lcd::print(2, "heading: %f", currPose.theta); // print the heading
     pros::delay(10);
   }
 }
@@ -54,11 +55,33 @@ void handleButtons() {
   }
   if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
     backRightWingOn = !backRightWingOn;
-    back_wing_left.set_value(backRightWingOn);
+    back_wing_right.set_value(backRightWingOn);
+  }
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
+    if (backRightWingOn && backLeftWingOn) {
+      back_wing_left.set_value(false);
+      back_wing_right.set_value(false);
+      backRightWingOn = false;
+      backLeftWingOn = false;
+    } else {
+      back_wing_left.set_value(true);
+      back_wing_right.set_value(true);
+      backRightWingOn = true;
+      backLeftWingOn = true;
+    }
   }
   // toggle hang
   if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
     hangUp = !hangUp;
     hang.set_value(hangUp);
+  }
+  // hold kicker
+  if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
+    const int SPEED = 127;
+    if (kickerStatus)
+      kicker->move(0);
+    else
+      kicker->move(SPEED);
+    kickerStatus = !kickerStatus;
   }
 }
