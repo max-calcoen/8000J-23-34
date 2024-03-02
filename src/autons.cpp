@@ -1,4 +1,5 @@
 #include "lemlib/chassis/chassis.hpp"
+#include "lemlib/pose.hpp"
 #include "main.h"
 #include "pros/misc.h"
 #include "robotFunctions.h"
@@ -169,71 +170,90 @@ void blueTest() {}
 
 // skills
 void skills() {
-  controller.rumble("--");
   bool aggressive = true;
-  bool shooting = false;
+  bool shooting = true;
   lemlib::Chassis &c = *skillsChassis;
   pros::Motor_Group &k = *kicker;
   if (aggressive) {
     // init
-    c.setPose(52.5, 53, 315);
+    c.setPose(52.5, 55, 315);
     // move back to push preloads in
-    c.moveTo(63, 30, 0, 2300, false, false, 5, 0.2);
+    c.moveTo(66, 30, 0, 2300, false, false, 5, 0.2);
     // move to shoot
-    c.moveTo(56, 44, 250, 1e5);
+    c.moveTo(58, 46, 250, 1e5);
     // flip down wings to be in matchload zone
     back_wing_right.set_value(true);
     backRightWingOn = true;
+    lemlib::Pose currPose(0, 0, 0);
+    pros::delay(1000);
+    currPose = c.getPose();
     if (shooting) {
       k = 127;
       const int NUM_BALLS = 44;
-      const int NUM_EX = 4;
+      const int NUM_EX = 16;
+      pros::delay(1000);
+      currPose = c.getPose();
       // wait while shooting
-      pros::delay((NUM_BALLS + NUM_EX) / 2 * 1000);
+      // let momentum stop
+      pros::delay((NUM_BALLS + NUM_EX) / 2 * 1000 - 1000);
       k = 0;
     } else {
       // 3 second dummy shooting
-      pros::delay(3e3);
+      pros::delay(1000);
+      currPose = c.getPose();
+      pros::delay(3e3 - 1000);
     }
     back_wing_right.set_value(false);
     backRightWingOn = false;
     intake = 127;
+    // reset to where we started
+    c.setPose(currPose.x, currPose.y, c.getPose().theta);
     // collect ball and knock others over
-    c.moveTo(12, 24, 270, 1e5);
+    c.moveTo(14, 24, 270, 2500);
     // move to push over short barrier
     front_wings.set_value(false);
-    c.turnTo(14, -40, 1e5);
+    c.turnTo(14, -40, 1500);
     front_wings.set_value(true);
     intake = -127;
-    c.moveTo(14, -40, 180, 1e5);
+    c.moveTo(14, -40, 180, 1500);
     front_wings.set_value(false);
     // turn to make motion chaining easier
-    c.turnTo(-40, -36, 1e5);
+    c.turnTo(40, -40, 1500);
     // motion chaining
     c.moveTo(40, -48, 180, 2500, false, true, 10, 0.4);
-    c.moveTo(24, -60, 270, 2500);
-    c.moveTo(-36, -60, 270, 1e5);
+    c.moveTo(24, -61, 270, 2500);
+    c.moveTo(-36, -61, 270, 2000);
     // score
-    c.moveTo(-60, -32, 0, 2500, false, true, 0, 0.5);
+    c.moveTo(-70, -30, 0, 3100, false, true, 0, 0.5);
     front_wings.set_value(false);
+    // reset
+    currPose = c.getPose();
+    c.setPose(-60, -32, currPose.theta);
     // back out
-    c.moveTo(-36, -33, 270, 2500, false, false, 0, 0.1);
-    // push in pt1
-    c.moveTo(-12, -24, 180, 2500, false, false);
+    c.moveTo(-24, -32, 270, 2500, false, false, 0, 0.4);
+    // orient to push in
+    c.moveTo(-15, -24, 180, 2500, false, false, 0, 0.9);
     back_wing_left.set_value(true);
+    backLeftWingOn = true;
     back_wing_right.set_value(true);
-    // push in pt2
-    c.moveTo(-36, -12, 90, 2500, false, false);
+    backRightWingOn = true;
+    // push in
+    c.moveTo(-43, -12, 90, 2600, false, false);
+    back_wing_left.set_value(false);
+    backRightWingOn = false;
+    back_wing_right.set_value(false);
+    backLeftWingOn = false;
     // move back to get another angle
-    c.moveTo(-12, -12, 270, 1e5);
-    c.turnTo(-12, 24, 1e5);
-    c.moveTo(-12, 24, 0, 1e5);
+    c.moveTo(-12, -12, 90, 2500);
+
+    c.turnTo(-12, 24, 1500);
+    c.moveTo(-12, 24, 0, 2500);
     // back up to push in
-    c.moveTo(-36, 12, 90, 3000, false, false);
-    c.waitUntilDist(10);
     back_wing_left.set_value(true);
+    backLeftWingOn = true;
     back_wing_right.set_value(true);
-    c.waitUntilDist(1e5);
-    c.moveTo(-12, 36, 0, 1e5);
+    backRightWingOn = true;
+    c.moveTo(-43, 8, 90, 3000, false, false);
+    // c.moveTo(-12, 36, 0, 1e5);
   }
 }

@@ -74,7 +74,7 @@ void initialize() {
 
   // https://lemlib.github.io/LemLib/md_docs_tutorials_3_tuning_and_moving.html
   lemlib::ChassisController_t lateralController{
-      30,   // kP
+      25,   // kP
       15,   // kD
       0.25, // smallErrorRange
       100,  // smallErrorTimeout

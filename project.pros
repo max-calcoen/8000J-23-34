@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "Google Kicker",
+    "project_name": "States Kicker",
     "target": "v5",
     "templates": {
       "Graphy": {
