@@ -6,7 +6,7 @@
 // selector configuration
 #define HUE 360
 #define DEFAULT 0
-#define AUTONS "Defensive", "Offensive", "Test"
+#define AUTONS "Safe", "MR Center", "MR Barrier", "Test"
 
 namespace selector {
 

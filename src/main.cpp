@@ -9,7 +9,7 @@
 
 pros::Controller controller = pros::E_CONTROLLER_MASTER;
 
-lemlib::Chassis *compChassis = nullptr;   // initialize to nullptr
+lemlib::Chassis *matchChassis = nullptr;  // initialize to nullptr
 lemlib::Chassis *skillsChassis = nullptr; // initialize to nullptr
 
 pros::Motor_Group *left_drivetrain = nullptr;  // initialize to nullptr
@@ -21,7 +21,7 @@ pros::Motor kicker2(13, pros::E_MOTOR_GEARSET_18, true);
 pros::Motor_Group *kicker = new pros::Motor_Group({kicker1, kicker2});
 
 pros::Imu inertialSensor(11);
-pros::Rotation *odomVertRotation = new pros::Rotation(7);
+pros::Rotation *odomVertRotation = new pros::Rotation(6);
 pros::Rotation *odomHoriRotation = new pros::Rotation(19);
 // TODO: measure distance
 lemlib::TrackingWheel odomVert(odomVertRotation, 2.75, -0.25, 1);
@@ -93,12 +93,12 @@ void initialize() {
   };
 
   // create the chassis and calibrate
-  compChassis = new lemlib::Chassis(drivetrain, lateralController,
-                                    angularController, odomSensors);
+  matchChassis = new lemlib::Chassis(drivetrain, lateralController,
+                                     angularController, odomSensors);
 
   skillsChassis = new lemlib::Chassis(drivetrain, lateralController,
                                       angularController, skillsOdomSensors);
-  compChassis->calibrate();
+  matchChassis->calibrate();
   // skillsChassis->calibrate();
 }
 
@@ -137,22 +137,28 @@ void autonomous() {
     skills();
     break;
   case 1:
-    redDefensive();
+    nearWP();
     break;
   case 2:
-    redOffensive();
+    nearMidrushCenter();
     break;
   case 3:
-    redTest();
+    nearMidrushBarrier();
+    break;
+  case 4:
+    test();
     break;
   case -1:
-    blueDefensive();
+    farSixBall();
     break;
   case -2:
-    blueOffensive();
+    farMidrushCenter();
     break;
   case -3:
-    blueTest();
+    farMidrushBarrier();
+    break;
+  case -4:
+    test();
     break;
   }
 }

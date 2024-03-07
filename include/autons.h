@@ -1,7 +1,10 @@
+extern void nearWP();
+extern void nearMidrushCenter();
+extern void nearMidrushBarrier();
+
+extern void farSixBall();
+extern void farMidrushCenter();
+extern void farMidrushBarrier();
+
+extern void test();
 extern void skills();
-extern void redDefensive();
-extern void blueDefensive();
-extern void redOffensive();
-extern void blueOffensive();
-extern void redTest();
-extern void blueTest();
