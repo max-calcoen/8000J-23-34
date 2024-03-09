@@ -7,8 +7,6 @@
 #include <iomanip>
 #include <sstream> // For std::ostringstream to convert numbers to strings.
 
-ASSET(skills1_txt)
-
 /*
  * helpful resources
  * path planner: https://path.jerryio.com/
@@ -143,7 +141,7 @@ void test() {
   bool testBoomerang = true;
   bool testMotionChaining = false;
   // MATCH CHASSIS
-  lemlib::Chassis &c = *skillsChassis;
+  lemlib::Chassis &c = *matchChassis;
 
   if (testFwd) {
     c.setPose(0, 0, 0);
@@ -194,28 +192,23 @@ void test() {
 
 // skills
 void skills() {
-  controller.clear();
-  bool shooting = true;
+  bool shooting = false;
   lemlib::Chassis &c = *skillsChassis;
   pros::Motor_Group &k = *kicker;
+  /*
   // init
   c.setPose(52.5, 55, 315);
   // move back to push preloads in
-  c.moveTo(66, 30, 0, 2300, false, false, 15, 0.40);
+  c.moveTo(66, 28, 0, 2000, false, false, 15, 0.5);
   // move to shoot
-  c.moveTo(60, 46, 255, 1e5, false, true, 0, 0.2);
+  c.moveTo(60, 46, 250, 3000, false, true, 0, 0.2);
   // flip down wings to be in matchload zone
   back_wing_right.set_value(true);
   backRightWingOn = true;
   lemlib::Pose currPose(0, 0, 0);
-  std::ostringstream beforeShootStream;
-  beforeShootStream << "" << std::fixed << std::setprecision(1) << c.getPose().x
-                    << "," << c.getPose().y << "," << c.getPose().theta;
-  controller.set_text(
-      0, 0, beforeShootStream.str().c_str()); // Print pose before shooting
   if (shooting) {
     const int NUM_BALLS = 44;
-    const int NUM_EX = 16;
+    const int NUM_EX = 6;
     k = 127;
     pros::delay(1000);
     currPose = c.getPose();
@@ -231,85 +224,93 @@ void skills() {
   }
   back_wing_right.set_value(false);
   c.setPose(currPose.x, currPose.y, currPose.theta);
-  std::ostringstream afterShootStream;
-  afterShootStream << "" << std::fixed << std::setprecision(1) << c.getPose().x
-                   << "," << c.getPose().y << "," << c.getPose().theta;
-  controller.set_text(
-      1, 0, afterShootStream.str().c_str()); // print pose after shooting
   intake = 127;
   // reset to where we started: we haven't moved!
   // collect ball and knock others over
-  c.moveTo(16, 20, 250, 2500, false, true, 0, 0.4);
+  c.moveTo(20, 20, 252, 2500, false, true, 0, 0.4);
   // move to push over short barrier
   front_wings.set_value(false);
-  c.turnTo(16, -40, 1000);
+  c.turnTo(20, -40, 800);
   front_wings.set_value(true);
   intake = -127;
   // go quick into
-  c.moveTo(16, -40, c.getPose().theta, 1500, false, true, 1000, 0);
+  c.moveTo(20, -40, c.getPose().theta, 1500, false, true, 1e5, 0);
   front_wings.set_value(false);
   // turn to make motion chaining easier
   c.turnTo(40, -40, 600);
   // motion chaining
-  c.moveTo(40, -48, 180, 1000, false, true, 10, 0.4);
-  c.moveTo(24, -61, 270, 800);
-  c.moveTo(-36, -61, 270, 1000);
-  front_wings.set_value(true);
+  c.moveTo(44, -48, 180, 1000, false, true, 10, 0.4);
+  c.moveTo(24, -60, 270, 600);
+  c.moveTo(-36, -60, 270, 800);
   // score
-  c.moveTo(-64, -30, 0, 2000, false, true, 0, 0.5);
-  front_wings.set_value(false);
+  c.moveTo(-63, -30, 0, 2500, true, true, 0, 0.6);
+  intake = 127;
+  c.waitUntilDist(10);
+  intake = -127;
+  c.waitUntilDist(1e5);
   // back up to get another push
-  c.moveTo(-48, -48, 270, 1000, false, false);
-  c.turnTo(-48, -56, 1000);
-  // push in with back of bot
-  c.moveTo(-56, -20, 180, 2400, false, false);
-  c.moveTo(-48, -56, 160, 1500);
-  c.moveTo(-56, -20, 180, 2400, false, false);
+  c.moveTo(-52, -56, 160, 2500, false, false);
   intake = 0;
+  // push in with back of bot
+  c.moveTo(-60, -20, 180, 2400, false, false, 0, 0.7);
+  intake = 0;
+  */
   // reset on goal
-  c.setPose(-56, -30, c.getPose().theta);
-  c.moveTo(-56, -31, 275, 1000, false, false);
-  // swing motion chaining: push in from left
-  c.moveTo(-24, -36, 270, 1400, false, false, 3, 0.6, 90);
-  back_wing_left.set_value(true);
-  c.moveTo(-12, -28, 180, 1200, false, false, 3, 0.6, 90);
-  c.moveTo(-42, -12, 90, 3000, false, false, 3, 0.6, 90);
-  // push in from center
-  // move out
-  c.moveTo(-12, -6, 90, 2000, true);
-  c.waitUntilDist(10);
-  back_wing_left.set_value(false);
-  c.waitUntilDist(1e5);
-  // slow no motion chaining
-  // push in
-  back_wing_left.set_value(true);
-  back_wing_right.set_value(true);
-  c.moveTo(-44, 0, 90, 4000, false, false, 0, 0.1, 80);
+  // c.setPose(-60, -30, c.getPose().theta);
+  c.setPose(-60, -36, 180);
   // move away
-  c.moveTo(-12, -12, 90, 1e5, true);
-  c.waitUntilDist(10);
-  back_wing_left.set_value(false);
+  c.moveTo(-48, -48, 180, 1500, false, true, 10, 0.3);
+  c.turnTo(-72, -72, 700);
+  c.moveTo(-24, -24, 180, 1200, false, false, 0, 0.2);
+  back_wing_left.set_value(true);
+  back_wing_right.set_value(true);
+  // push with back of bot into left side of goal
+  c.moveTo(-100, -10, 90, 3000, true, false, 20, 0.9);
+  c.waitUntilDist(36);
   back_wing_right.set_value(false);
   c.waitUntilDist(1e5);
-  // push in from right
-  c.turnTo(-12, 36, 1000);
-  c.moveTo(-12, 36, 0, 1800);
+  back_wing_left.set_value(false);
+  c.setPose(-41, -10, 90);
+  // back out
+  c.moveTo(-12, -10, 90, 800);
+  // get set up for next push
+  c.turnTo(-12, 36, 600);
+  intake = 127;
+  c.moveTo(-12, 36, 0, 1000);
+  return;
   back_wing_right.set_value(true);
-  c.moveTo(-42, 18, 90, 4000, false, false, 0, 0.2, 80);
+  // push with back of bot into the right side of goal
+  c.moveTo(-44, 18, 90, 3200, false, false, 70, 0.7);
   back_wing_right.set_value(false);
+  // back out
+  c.moveTo(-12, 18, 90, 2000, false, true, 0, 0);
+  c.turnTo(-12, 36, 600);
+  // push in with back of bot into center of goal
+  back_wing_right.set_value(true);
+  back_wing_left.set_value(true);
+  c.moveTo(-50, 0, 90, 2600, false, false, 50, 0.9);
   // reset on goal
-  c.setPose(-42, 14, c.getPose().theta);
-  // right side
-  // move out motion chaining
-  c.moveTo(-12, 24, 0, 1000);
-  c.moveTo(-36, 36, 270, 1000);
-  front_wings.set_value(true);
-  c.moveTo(-48, 48, 315, 1000, false, true, 0, 0.1);
-  c.moveTo(-60, 30, 180, 3000);
-  c.moveTo(-48, 48, 225, 1000, false, false);
-  front_wings.set_value(false);
-  c.turnTo(24, 72, 1300);
-  c.moveTo(-60, 30, 0, 3000, false, false, 10000);
-  c.moveTo(-48, 48, 30, 1000, false, true);
-  c.moveTo(-60, 30, 0, 3000, false, false, 10000);
+  c.setPose(-42, 0, c.getPose().theta);
+  // go to right side of goal
+  c.moveTo(-40, 60, 0, 2300, true, true, 0, 0.9);
+  c.waitUntilDist(5);
+  back_wing_right.set_value(false);
+  c.waitUntilDist(1e5);
+  back_wing_left.set_value(false);
+  c.turnTo(-60, 30, 800);
+  intake = -127;
+  // push in
+  c.moveTo(-60, 20, 180, 2500, false, true, 0, 0.7);
+  // go to hang
+  hang.set_value(true);
+  intake = 0;
+  c.moveTo(-12, 60, 270, 1500, false, false, 0, 0.7);
+  c.turnTo(0, 60, 600);
+  c.moveTo(12, 60, 90, 1200, true);
+  c.waitUntilDist(24);
+  hang.set_value(false);
+  c.waitUntilDist(1e5);
+  hang.set_value(false);
+  // celly
+  intake = -127;
 }

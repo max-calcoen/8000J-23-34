@@ -107,7 +107,10 @@ void initialize() {
  * or the VEX Competition Switch, following either autonomous or opcontrol.
  * When the robot is enabled, this task will exit.
  */
-void disabled() {}
+void disabled() {
+  // just in case- forgot to press button or time ran out
+  hang.set_value(false);
+}
 
 /**
  * Runs after initialize(), and before autonomous when connected to the Field
